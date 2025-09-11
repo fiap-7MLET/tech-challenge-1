@@ -1,6 +1,5 @@
 from flask import Flask
 
-from flask import Flask
 from extensions import db
 from conf import Conf
 from routes import register_blueprints
