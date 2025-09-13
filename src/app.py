@@ -4,9 +4,9 @@ from extensions import db
 from conf import Conf
 from routes import register_blueprints
 
-def create_app():
+def create_app(config_object=Conf):
     app = Flask(__name__)
-    app.config.from_object(Conf)
+    app.config.from_object(config_object)
 
     db.init_app(app)
     register_blueprints(app)

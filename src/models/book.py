@@ -8,3 +8,14 @@ class Book(db.Model):
     availability = db.Column(db.Boolean, nullable=False, default=True)
     category = db.Column(db.String(120), nullable=False)
     image = db.Column(db.String(120), nullable=True)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "price": float(self.price),
+            "rating": self.rating,
+            "availability": self.availability,
+            "category": self.category,
+            "image": self.image
+        }

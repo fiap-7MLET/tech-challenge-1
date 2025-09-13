@@ -7,13 +7,16 @@ poetry install
 
 então:
 
-poetry run python app.py
+poetry run python src/app.py
 
 vai rodar a aplicação na porta 5000
-
 
 então, ao rodar o curl
 
 curl -w "%{http_code}\n" -X POST http://localhost:5000/api/v1/auth/register
 
 vai retornar o 501, feito no routes/user_routes.py
+
+para rodar os testes:
+
+poetry run pytest
