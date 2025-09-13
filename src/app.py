@@ -5,7 +5,7 @@ from conf import Conf
 from routes import register_blueprints
 
 def create_app(config_object=Conf):
-    app = Flask(__name__)
+    app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config_object)
 
     db.init_app(app)

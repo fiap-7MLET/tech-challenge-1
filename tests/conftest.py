@@ -13,8 +13,7 @@ class TestConfig:
 def app():
     app = create_app(TestConfig)
     app.config.update({
-        "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:"
+        "TESTING": True
     })
     return app
 
