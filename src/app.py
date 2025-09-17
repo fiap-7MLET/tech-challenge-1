@@ -7,6 +7,8 @@ from routes import register_blueprints
 from services.scraping.core import scrape_all_books
 from services.scraping.file_handler import update_books_data
 
+from models.book import Book
+from models.user import User
 
 def create_app(config_object=Conf):
     app = Flask(__name__, instance_relative_config=True)
