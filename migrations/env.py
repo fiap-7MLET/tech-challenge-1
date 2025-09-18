@@ -10,13 +10,11 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from app import create_app
-from extensions import db
 
-app = create_app()
-app.app_context().push()
-context.config.set_main_option("sqlalchemy.url", app.config["SQLALCHEMY_DATABASE_URI"])
-target_metadata = db.metadata
+from src.extensions import engine, Base
+
+context.config.set_main_option("sqlalchemy.url", str(engine.url))
+target_metadata = Base.metadata
 
 config = context.config
 

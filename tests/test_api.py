@@ -1,8 +1,17 @@
 import pytest
 from fastapi.testclient import TestClient
 from src.main import app
+from src.extensions import engine
+from src.models.user import User
+from src.models.book import Book
+from sqlalchemy.orm import declarative_base
 
 client = TestClient(app)
+
+# Setup para criar as tabelas antes dos testes
+Base = declarative_base()
+User.__table__.create(bind=engine, checkfirst=True)
+Book.__table__.create(bind=engine, checkfirst=True)
 
 # Testes para o endpoint de usuários
 

@@ -1,6 +1,13 @@
-from extensions import db
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)
+from sqlalchemy import Column, Integer, String
+from src.extensions import Base
+
+class User(Base):
+    """
+    Modelo de usuário para persistência no banco de dados.
+    """
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(120), unique=True, nullable=False, index=True)
+    password = Column(String(128), nullable=False)
