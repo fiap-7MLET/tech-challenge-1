@@ -1,10 +1,11 @@
 from fastapi import FastAPI
-from src.api.routes import user, book
+from src.api.routes import user, book, scraping
 
 app = FastAPI(title="Tech Challenge 1 - FastAPI")
 
 app.include_router(user.router, prefix="/api/v1/users", tags=["Usuários"])
 app.include_router(book.router, prefix="/api/v1/books", tags=["Livros"])
+app.include_router(scraping.router, prefix="/api/v1/scraping", tags=["Scraping"])
 
 """
 Docstring:
