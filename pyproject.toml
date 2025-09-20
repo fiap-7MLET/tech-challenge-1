@@ -3,17 +3,19 @@ name = "tech-challenge-1"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Allan Vital",email = "allan.vital@gmail.com"}
+  { name = "Allan Vital", email = "allan.vital@gmail.com" },
+  { name = "Fernando Leitão", email = "fernando.leitao@gmail.com"}
 ]
-license = {text = "MIT"}
+license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.12"
 
-
 dependencies = [
-    "flask (>=3.1.2,<4.0.0)",
-    "flask-sqlalchemy (>=3.1.1,<4.0.0)",
-    "alembic (>=1.16.5,<2.0.0)"
+  "flask (>=3.1.2,<4.0.0)",
+  "flask-sqlalchemy (>=3.1.1,<4.0.0)",
+  "alembic (>=1.16.5,<2.0.0)",
+  "httpx (>=0.28.1,<0.29.0)",
+  "bs4 (>=0.0.2,<0.0.3)",
 ]
 
 
@@ -24,4 +26,3 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.2"
 factory-boy = "^3.3.3"
-
