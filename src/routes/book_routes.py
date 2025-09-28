@@ -1,39 +1,51 @@
-from flask import Blueprint, request, jsonify
+from fastapi import APIRouter, HTTPException, Query, Depends
+from typing import Optional
 from models.book import Book
-from utils.serializers import serialize_rows
+from sqlalchemy.orm import Session
+from src.extensions import get_db
+from src.api.schemas.book import BookSchema
 
-book_bp = Blueprint('book', __name__)
+router = APIRouter(prefix="/books", tags=["books"])
 
+@router.get("/", response_model=dict)
+def all_books(page: int = Query(1, ge=1), per_page: int = Query(5, ge=1), db: Session = Depends(get_db)):
+    query = db.query(Book).order_by(Book.id)
+    total = query.count()
+    items = query.offset((page - 1) * per_page).limit(per_page).all()
+    return {
+    "data": [BookSchema.model_validate(book) for book in items],
+        "page": page,
+        "per_page": per_page,
+        "total": total,
+        "pages": (total // per_page) + (1 if total % per_page else 0)
+    }
 
-@book_bp.route('/', methods=['GET'])
-def all_books():
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 5))
-    query = Book.query.order_by(Book.id).paginate(page=page, per_page=per_page)
-
-    return serialize_rows(query), 200
-
-@book_bp.route('/<int:book_id>', methods=['GET'])
-def single_book(book_id):
-    book = Book.query.filter_by(id=book_id).first()
+@router.get("/{book_id}", response_model=BookSchema)
+def single_book(book_id: int, db: Session = Depends(get_db)):
+    book = db.query(Book).filter_by(id=book_id).first()
     if not book:
-        return jsonify({"error": "Book not found"}), 404
-    return jsonify(book.to_dict())
+        raise HTTPException(status_code=404, detail="Book not found")
+    return BookSchema.model_validate(book)
 
-@book_bp.route('/search', methods=['GET'])
-def search():
-    title = request.args.get('title')
-    category = request.args.get('category')
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 5))
-
-    query = Book.query
-
+@router.get("/search", response_model=dict)
+def search(
+    title: Optional[str] = Query(None),
+    category: Optional[str] = Query(None),
+    page: int = Query(1, ge=1),
+    per_page: int = Query(5, ge=1),
+    db: Session = Depends(get_db)
+):
+    query = db.query(Book)
     if title:
         query = query.filter(Book.title.ilike(f"%{title}%"))
     if category:
         query = query.filter(Book.category.ilike(f"%{category}%"))
-
-    result = query.order_by(Book.id).paginate(page=page, per_page=per_page)
-
-    return serialize_rows(result), 200
+    total = query.count()
+    items = query.order_by(Book.id).offset((page - 1) * per_page).limit(per_page).all()
+    return {
+    "data": [BookSchema.model_validate(book) for book in items],
+        "page": page,
+        "per_page": per_page,
+        "total": total,
+        "pages": (total // per_page) + (1 if total % per_page else 0)
+    }

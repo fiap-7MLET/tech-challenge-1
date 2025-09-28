@@ -1,25 +1,30 @@
-from flask import Blueprint, request, jsonify
-from sqlalchemy import select
+
+# Migração para FastAPI
+from fastapi import APIRouter, Query
+from sqlalchemy.orm import Session
+from fastapi import Depends
+
 from models.book import Book
-from utils.serializers import serialize_rows
-from extensions import db
+from src.extensions import get_db
 
-category_bp = Blueprint('category', __name__)
+router = APIRouter(prefix="/categories", tags=["categories"])
 
-@category_bp.route('/', methods=['GET'])
-def all_categories():
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 5))
 
-    subquery = db.session.query(Book.category).distinct().order_by(Book.category)
-    pagination = subquery.paginate(page=page, per_page=per_page)
 
-    data = [{"name": category[0]} for category in pagination.items]
-
-    return jsonify({
+@router.get("/")
+def all_categories(
+    page: int = Query(1, ge=1),
+    per_page: int = Query(5, ge=1),
+    db: Session = Depends(get_db)
+):
+    subquery = db.query(Book.category).distinct().order_by(Book.category)
+    total = subquery.count()
+    items = subquery.offset((page - 1) * per_page).limit(per_page).all()
+    data = [{"name": category[0]} for category in items]
+    return {
         "data": data,
-        "page": pagination.page,
-        "per_page": pagination.per_page,
-        "total": pagination.total,
-        "pages": pagination.pages
-    })
+        "page": page,
+        "per_page": per_page,
+        "total": total,
+        "pages": (total // per_page) + (1 if total % per_page else 0)
+    }
