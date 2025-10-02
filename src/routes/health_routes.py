@@ -1,5 +1,5 @@
+"""Rotas de health check da API."""
 
-# Migração para FastAPI
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 from src.extensions import SessionLocal
@@ -9,6 +9,12 @@ router = APIRouter(prefix="/health", tags=["health"])
 
 @router.get("/")
 def health():
+    """
+    Verifica o status da API e a conectividade com o banco de dados.
+
+    Returns:
+        JSONResponse: Status da API e do banco de dados
+    """
     status_ = "ok"
     db_status = "up"
     error = False

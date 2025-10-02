@@ -1,14 +1,12 @@
+"""Rotas para consulta de categorias de livros."""
 
-# Migração para FastAPI
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 from sqlalchemy.orm import Session
-from fastapi import Depends
 
-from models.book import Book
+from src.models.book import Book
 from src.extensions import get_db
 
 router = APIRouter(prefix="/categories", tags=["categories"])
-
 
 
 @router.get("/")
@@ -17,6 +15,17 @@ def all_categories(
     per_page: int = Query(5, ge=1),
     db: Session = Depends(get_db)
 ):
+    """
+    Lista todas as categorias de livros disponíveis com paginação.
+
+    Args:
+        page: Número da página (padrão: 1)
+        per_page: Quantidade de itens por página (padrão: 5)
+        db: Sessão do banco de dados
+
+    Returns:
+        dict: Categorias paginadas com metadados de paginação
+    """
     subquery = db.query(Book.category).distinct().order_by(Book.category)
     total = subquery.count()
     items = subquery.offset((page - 1) * per_page).limit(per_page).all()
