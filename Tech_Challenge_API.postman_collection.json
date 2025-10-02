@@ -1,0 +1,452 @@
+{
+	"info": {
+		"_postman_id": "tech-challenge-api-collection",
+		"name": "Tech Challenge API",
+		"description": "Complete API collection for the Tech Challenge FastAPI application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health",
+								""
+							]
+						},
+						"description": "Check API and database health status"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "Get All Books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/books/?page=1&per_page=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number (default: 1)"
+								},
+								{
+									"key": "per_page",
+									"value": "5",
+									"description": "Items per page (default: 5)"
+								}
+							]
+						},
+						"description": "Get paginated list of all books"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Book by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/books/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books",
+								"1"
+							]
+						},
+						"description": "Get a single book by its ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/books/search?title=&category=&page=1&per_page=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books",
+								"search"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "",
+									"description": "Search by book title (optional)"
+								},
+								{
+									"key": "category",
+									"value": "",
+									"description": "Search by category (optional)"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number (default: 1)"
+								},
+								{
+									"key": "per_page",
+									"value": "5",
+									"description": "Items per page (default: 5)"
+								}
+							]
+						},
+						"description": "Search books by title and/or category with pagination"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Top Rated Books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/books/top-rated",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books",
+								"top-rated"
+							]
+						},
+						"description": "Get books with highest ratings (NOT IMPLEMENTED - returns 501)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Books by Price Range",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/books/price-range?min=10&max=50",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books",
+								"price-range"
+							],
+							"query": [
+								{
+									"key": "min",
+									"value": "10",
+									"description": "Minimum price (optional)"
+								},
+								{
+									"key": "max",
+									"value": "50",
+									"description": "Maximum price (optional)"
+								}
+							]
+						},
+						"description": "Filter books by price range (NOT IMPLEMENTED - returns 501)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categories/?page=1&per_page=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number (default: 1)"
+								},
+								{
+									"key": "per_page",
+									"value": "5",
+									"description": "Items per page (default: 5)"
+								}
+							]
+						},
+						"description": "Get paginated list of all book categories"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Scraping",
+			"item": [
+				{
+					"name": "Trigger Scraping",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/scraping/trigger",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"scraping",
+								"trigger"
+							]
+						},
+						"description": "Trigger web scraping to collect book data and populate the database and CSV file"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Scraping Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/scraping/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"scraping",
+								"status"
+							]
+						},
+						"description": "Get current database statistics and scraping status"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Stats",
+			"item": [
+				{
+					"name": "Get Overview Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/stats/overview",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stats",
+								"overview"
+							]
+						},
+						"description": "Get general collection statistics: total books, average price, rating distribution (NOT IMPLEMENTED - returns 501)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/stats/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stats",
+								"categories"
+							]
+						},
+						"description": "Get detailed statistics by category: book count, prices per category (NOT IMPLEMENTED - returns 501)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ML",
+			"item": [
+				{
+					"name": "Get ML Features",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ml/features",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ml",
+								"features"
+							]
+						},
+						"description": "Get data formatted for ML model features (NOT IMPLEMENTED - returns 501)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get ML Training Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ml/training-data",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ml",
+								"training-data"
+							]
+						},
+						"description": "Get dataset for ML model training (NOT IMPLEMENTED - returns 501)"
+					},
+					"response": []
+				},
+				{
+					"name": "Post ML Predictions",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ml/predictions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ml",
+								"predictions"
+							]
+						},
+						"description": "Endpoint to receive ML model predictions (NOT IMPLEMENTED - returns 501)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "User registration endpoint (NOT IMPLEMENTED - returns 501)"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "User login endpoint (NOT IMPLEMENTED - returns 501)"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						},
+						"description": "User logout endpoint (NOT IMPLEMENTED - returns 501)"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "Token refresh endpoint (NOT IMPLEMENTED - returns 501)"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+}
