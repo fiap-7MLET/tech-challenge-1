@@ -1,23 +1,35 @@
 from logging.config import fileConfig
+import sys
+import os
+from pathlib import Path
+from dotenv import load_dotenv
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+# Adiciona o diretório src ao path para permitir imports
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+
+# Carrega variáveis de ambiente
+load_dotenv()
 
 from alembic import context
-from app import create_app
-from extensions import db
+from sqlalchemy import engine_from_config, pool
 
-app = create_app()
-app.app_context().push()
-context.config.set_main_option("sqlalchemy.url", app.config["SQLALCHEMY_DATABASE_URI"])
-target_metadata = db.metadata
+# Importa os modelos para que o Alembic detecte as tabelas
+from src.models import Base
+from src.models.user import User  # noqa: F401
+from src.models.book import Book  # noqa: F401
+
+target_metadata = Base.metadata
 
 config = context.config
+
+# Sobrescreve a URL do banco de dados com a variável de ambiente
+if os.getenv("DATABASE_URL"):
+    config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-#target_metadata = None
+# target_metadata = None
 
 
 def run_migrations_offline() -> None:
@@ -58,9 +70,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

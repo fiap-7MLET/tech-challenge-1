@@ -1,9 +1,7 @@
 """Modelo de dados para livros."""
 
 from sqlalchemy import Column, Integer, String, Numeric, Boolean
-from sqlalchemy.orm import declarative_base
-
-Base = declarative_base()
+from src.models import Base
 
 class Book(Base):
     """
