@@ -92,14 +92,17 @@ Este comando irá:
 
 #### Livros
 - **GET** `/books/` - Lista todos os livros com paginação
-  - Query params: `page` (default: 1), `per_page` (default: 5)
+  - Query params: `page` (default: 1), `per_page` (default: 10)
+  - Resposta inclui URLs de navegação: `next`, `previous`
 - **GET** `/books/{id}` - Retorna detalhes de um livro específico
 - **GET** `/books/search` - Busca livros por título e/ou categoria
   - Query params: `title`, `category`, `page`, `per_page`
+  - Resposta inclui URLs de navegação: `next`, `previous`
 
 #### Categorias
 - **GET** `/categories/` - Lista todas as categorias disponíveis com paginação
-  - Query params: `page` (default: 1), `per_page` (default: 5)
+  - Query params: `page` (default: 1), `per_page` (default: 10)
+  - Resposta inclui URLs de navegação: `next`, `previous`
 
 #### Scraping
 - **POST** `/scraping/trigger` - Dispara o processo de scraping e popula o banco de dados
@@ -140,6 +143,19 @@ curl http://localhost:8000/health/
 curl "http://localhost:8000/books/?page=1&per_page=10"
 ```
 
+**Resposta de exemplo:**
+```json
+{
+  "data": [...],
+  "page": 1,
+  "per_page": 10,
+  "total": 100,
+  "pages": 10,
+  "next": "http://localhost:8000/books/?page=2&per_page=10",
+  "previous": null
+}
+```
+
 ### Buscar Livro por ID
 
 ```bash
@@ -149,19 +165,45 @@ curl "http://localhost:8000/books/1"
 ### Buscar Livros por Título
 
 ```bash
-curl "http://localhost:8000/books/search?title=python&page=1&per_page=5"
+curl "http://localhost:8000/books/search?title=python&page=1&per_page=10"
+```
+
+**Resposta de exemplo:**
+```json
+{
+  "data": [...],
+  "page": 1,
+  "per_page": 10,
+  "total": 15,
+  "pages": 2,
+  "next": "http://localhost:8000/books/search?title=python&per_page=10&page=2",
+  "previous": null
+}
 ```
 
 ### Buscar Livros por Categoria
 
 ```bash
-curl "http://localhost:8000/books/search?category=Fiction&page=1&per_page=5"
+curl "http://localhost:8000/books/search?category=Fiction&page=1&per_page=10"
 ```
 
 ### Listar Todas as Categorias
 
 ```bash
 curl "http://localhost:8000/categories/?page=1&per_page=20"
+```
+
+**Resposta de exemplo:**
+```json
+{
+  "data": [...],
+  "page": 1,
+  "per_page": 20,
+  "total": 50,
+  "pages": 3,
+  "next": "http://localhost:8000/categories/?page=2&per_page=20",
+  "previous": null
+}
 ```
 
 ### Verificar Status do Scraping

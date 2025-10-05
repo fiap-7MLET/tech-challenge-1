@@ -18,6 +18,8 @@ def test_books_route():
     assert "per_page" in response.json()
     assert "total" in response.json()
     assert "pages" in response.json()
+    assert "next" in response.json()
+    assert "previous" in response.json()
 
 def test_categories_route():
     response = client.get("/categories/")
@@ -27,6 +29,8 @@ def test_categories_route():
     assert "per_page" in response.json()
     assert "total" in response.json()
     assert "pages" in response.json()
+    assert "next" in response.json()
+    assert "previous" in response.json()
 
 def test_auth_routes():
     for endpoint in ["/auth/register", "/auth/login", "/auth/logout", "/auth/refresh"]:

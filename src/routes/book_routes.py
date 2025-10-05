@@ -1,6 +1,6 @@
 """Rotas para consulta e pesquisa de livros."""
 
-from fastapi import APIRouter, HTTPException, Query, Depends, status
+from fastapi import APIRouter, HTTPException, Query, Depends, status, Request
 from typing import Optional
 from src.models.book import Book
 from sqlalchemy.orm import Session
@@ -10,13 +10,14 @@ from src.api.schemas.book import BookSchema
 router = APIRouter(prefix="/books", tags=["books"])
 
 @router.get("/", response_model=dict)
-def all_books(page: int = Query(1, ge=1), per_page: int = Query(5, ge=1), db: Session = Depends(get_db)):
+def all_books(request: Request, page: int = Query(1, ge=1), per_page: int = Query(10, ge=1), db: Session = Depends(get_db)):
     """
     Lista todos os livros disponíveis no banco de dados com paginação.
 
     Args:
+        request: Request object para construir URLs
         page: Número da página (padrão: 1)
-        per_page: Quantidade de itens por página (padrão: 5)
+        per_page: Quantidade de itens por página (padrão: 10)
         db: Sessão do banco de dados
 
     Returns:
@@ -25,30 +26,40 @@ def all_books(page: int = Query(1, ge=1), per_page: int = Query(5, ge=1), db: Se
     query = db.query(Book).order_by(Book.id)
     total = query.count()
     items = query.offset((page - 1) * per_page).limit(per_page).all()
+    total_pages = (total // per_page) + (1 if total % per_page else 0)
+
+    base_url = str(request.url.remove_query_params(["page"]))
+    next_url = f"{base_url}?page={page + 1}&per_page={per_page}" if page < total_pages else None
+    prev_url = f"{base_url}?page={page - 1}&per_page={per_page}" if page > 1 else None
+
     return {
-    "data": [BookSchema.model_validate(book) for book in items],
+        "data": [BookSchema.model_validate(book) for book in items],
         "page": page,
         "per_page": per_page,
         "total": total,
-        "pages": (total // per_page) + (1 if total % per_page else 0)
+        "pages": total_pages,
+        "next": next_url,
+        "previous": prev_url
     }
 
 @router.get("/search", response_model=dict)
 def search(
+    request: Request,
     title: Optional[str] = Query(None),
     category: Optional[str] = Query(None),
     page: int = Query(1, ge=1),
-    per_page: int = Query(5, ge=1),
+    per_page: int = Query(10, ge=1),
     db: Session = Depends(get_db)
 ):
     """
     Busca livros por título e/ou categoria com paginação.
 
     Args:
+        request: Request object para construir URLs
         title: Título do livro para busca (opcional)
         category: Categoria do livro para busca (opcional)
         page: Número da página (padrão: 1)
-        per_page: Quantidade de itens por página (padrão: 5)
+        per_page: Quantidade de itens por página (padrão: 10)
         db: Sessão do banco de dados
 
     Returns:
@@ -61,12 +72,20 @@ def search(
         query = query.filter(Book.category.ilike(f"%{category}%"))
     total = query.count()
     items = query.order_by(Book.id).offset((page - 1) * per_page).limit(per_page).all()
+    total_pages = (total // per_page) + (1 if total % per_page else 0)
+
+    base_url = str(request.url.remove_query_params(["page"]))
+    next_url = f"{base_url}&page={page + 1}" if page < total_pages else None
+    prev_url = f"{base_url}&page={page - 1}" if page > 1 else None
+
     return {
-    "data": [BookSchema.model_validate(book) for book in items],
+        "data": [BookSchema.model_validate(book) for book in items],
         "page": page,
         "per_page": per_page,
         "total": total,
-        "pages": (total // per_page) + (1 if total % per_page else 0)
+        "pages": total_pages,
+        "next": next_url,
+        "previous": prev_url
     }
 
 @router.get("/top-rated", status_code=status.HTTP_501_NOT_IMPLEMENTED)
