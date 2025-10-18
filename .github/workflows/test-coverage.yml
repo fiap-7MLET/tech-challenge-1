@@ -26,6 +26,12 @@ jobs:
       - name: uv sync
         run: uv sync --locked --all-extras --dev
 
+      - name: create .env file
+        run: |
+          echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
+          echo "DEBUG=True" >> .env
+          cat .env
+
       - name: run tests and generate html artifact 
         run: uv run pytest --cov=src --cov-report=html:html
 
