@@ -7,7 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - run: curl -fsS "${DEPLOY_URL}?ref=${SHORT_SHA}"
+      - run: curl "${DEPLOY_URL}&ref=${SHORT_SHA}"
         env:
           DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
           COMMIT_SHA: ${{ github.sha }}
