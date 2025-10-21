@@ -18,6 +18,10 @@ jobs:
           echo "Polling Render API for deploy status..."
           deadline=$((SECONDS+1800))  # 30 min timeout
           
+          echo "Render key: $RENDER_SERVICE_ID"
+          echo "Render key: $RENDER_API_KEY"
+          echo "Full URL: https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys/$deploy_id"
+          
           while :; do
             response=$(curl -fsS \
               -H "Authorization: Bearer $RENDER_API_KEY" \
