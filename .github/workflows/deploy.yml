@@ -9,7 +9,43 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - run: curl "${DEPLOY_URL}&ref=${COMMIT_SHA}"
+      #- run: curl "${DEPLOY_URL}&ref=${COMMIT_SHA}"
+      - run: |
+          response=$(curl -s "${DEPLOY_URL}&ref=${COMMIT_SHA}")
+          deploy_id=$(echo "$response" | jq -r '.deploy.id')
+          echo "deploy_id=$deploy_id"
+
+          echo "Polling Render API for deploy status..."
+          deadline=$((SECONDS+1800))  # 30 min timeout
+          
+          while :; do
+            response=$(curl -fsS \
+              -H "Authorization: Bearer $RENDER_API_KEY" \
+              "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys/$deploy_id")
+            status=$(echo "$response" | jq -r '.status')
+            echo "Deploy status: $status"
+
+            case "$status" in
+              live|succeeded)
+                echo "Deploy succeeded."
+                break
+                ;;
+              failed|canceled)
+                echo "::error::Deploy $deploy_id $STATUS"
+                exit 1
+                ;;
+              *)
+                if (( SECONDS > deadline )); then
+                  echo "::error::Timed out waiting for Render deploy"
+                  exit 1
+                fi
+                sleep 10
+                ;;
+            esac
+          done
+        
+          
+          
         env:
           DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
           COMMIT_SHA: ${{ github.sha }}
