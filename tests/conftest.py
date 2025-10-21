@@ -1,29 +1,26 @@
+"""Configuração de fixtures do pytest."""
+
 import pytest
-from app import create_app
-from extensions import db as _db
+import sys
+from pathlib import Path
 
-from models.book import Book
+# Adiciona src ao path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-class TestConfig:
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
-    V1_ROOT = "/api/v1"
 
-@pytest.fixture(scope="session")
-def app():
-    app = create_app(TestConfig)
-    app.config.update({
-        "TESTING": True
-    })
-    return app
+@pytest.fixture(scope="session", autouse=True)
+def setup_database():
+    """Cria as tabelas do banco de dados antes de executar os testes."""
+    from src.extensions import engine
+    from src.models import Base
+    # Importa os modelos para registrá-los no metadata
+    from src.models.book import Book  # noqa: F401
+    from src.models.user import User  # noqa: F401
 
-@pytest.fixture(scope="session")
-def db(app):
-    with app.app_context():
-        _db.create_all()
-        yield _db
-        _db.drop_all()
+    # Cria todas as tabelas
+    Base.metadata.create_all(bind=engine)
 
-@pytest.fixture
-def client(app):
-    return app.test_client()
+    yield
+
+    # Limpa as tabelas após os testes
+    Base.metadata.drop_all(bind=engine)

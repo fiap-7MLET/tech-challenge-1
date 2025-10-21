@@ -1,25 +1,49 @@
-from flask import Blueprint, request, jsonify
-from sqlalchemy import select
-from models.book import Book
-from utils.serializers import serialize_rows
-from extensions import db
+"""Rotas para consulta de categorias de livros."""
 
-category_bp = Blueprint('category', __name__)
+from fastapi import APIRouter, Depends, Query, Request
+from sqlalchemy.orm import Session
 
-@category_bp.route('/', methods=['GET'])
-def all_categories():
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 5))
+from src.extensions import get_db
+from src.models.book import Book
 
-    subquery = db.session.query(Book.category).distinct().order_by(Book.category)
-    pagination = subquery.paginate(page=page, per_page=per_page)
+router = APIRouter(prefix="/categories", tags=["categories"])
 
-    data = [{"name": category[0]} for category in pagination.items]
 
-    return jsonify({
+@router.get("/")
+def all_categories(
+    request: Request,
+    page: int = Query(1, ge=1),
+    per_page: int = Query(10, ge=1),
+    db: Session = Depends(get_db),
+):
+    """
+    Lista todas as categorias de livros disponíveis com paginação.
+
+    Args:
+        request: Request object para construir URLs
+        page: Número da página (padrão: 1)
+        per_page: Quantidade de itens por página (padrão: 10)
+        db: Sessão do banco de dados
+
+    Returns:
+        dict: Categorias paginadas com metadados de paginação
+    """
+    subquery = db.query(Book.category).distinct().order_by(Book.category)
+    total = subquery.count()
+    items = subquery.offset((page - 1) * per_page).limit(per_page).all()
+    data = [{"name": category[0]} for category in items]
+    total_pages = (total // per_page) + (1 if total % per_page else 0)
+
+    base_url = str(request.url.remove_query_params(["page"]))
+    next_url = f"{base_url}?page={page + 1}&per_page={per_page}" if page < total_pages else None
+    prev_url = f"{base_url}?page={page - 1}&per_page={per_page}" if page > 1 else None
+
+    return {
         "data": data,
-        "page": pagination.page,
-        "per_page": pagination.per_page,
-        "total": pagination.total,
-        "pages": pagination.pages
-    })
+        "page": page,
+        "per_page": per_page,
+        "total": total,
+        "pages": total_pages,
+        "next": next_url,
+        "previous": prev_url,
+    }

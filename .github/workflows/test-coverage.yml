@@ -1,0 +1,45 @@
+name: Build - Tests and Coverage using uv
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: uv setup
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: uv sync
+        run: uv sync --locked --all-extras --dev
+
+      - name: create .env file
+        run: |
+          echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
+          echo "DEBUG=True" >> .env
+          cat .env
+
+      - name: run tests and generate html artifact 
+        run: uv run pytest --cov=src --cov-report=html:html
+
+      - name: upload html coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: html/
+          retention-days: 7

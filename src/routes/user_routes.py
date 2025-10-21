@@ -1,19 +1,25 @@
-from flask import Blueprint, request, jsonify
+"""Rotas de autenticação de usuários (não implementadas)."""
 
-user_bp = Blueprint('user', __name__)
+from fastapi import APIRouter, status
 
-@user_bp.route('/register', methods=['POST'])
+router = APIRouter(prefix="/auth", tags=["auth"])
+
+@router.post("/register", status_code=status.HTTP_501_NOT_IMPLEMENTED)
 def register():
-    return "", 501 
+    """Endpoint de registro de usuário (não implementado)."""
+    return ""
 
-@user_bp.route('/login', methods=['POST'])
+@router.post("/login", status_code=status.HTTP_501_NOT_IMPLEMENTED)
 def login():
-    return "", 501 
+    """Endpoint de login de usuário (não implementado)."""
+    return ""
 
-@user_bp.route('/logout', methods=['POST'])
+@router.post("/logout", status_code=status.HTTP_501_NOT_IMPLEMENTED)
 def logout():
-    return "", 501 
+    """Endpoint de logout de usuário (não implementado)."""
+    return ""
 
-@user_bp.route('/refresh', methods=['POST'])
+@router.post("/refresh", status_code=status.HTTP_501_NOT_IMPLEMENTED)
 def refresh():
-    return "", 501 
+    """Endpoint de renovação de token (não implementado)."""
+    return ""
