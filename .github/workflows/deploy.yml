@@ -51,5 +51,7 @@ jobs:
           
           
         env:
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
           COMMIT_SHA: ${{ github.sha }}
