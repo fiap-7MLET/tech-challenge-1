@@ -131,22 +131,60 @@ Este comando irá:
 
 ## 🌐 Exemplos de Uso
 
+A API pode ser testada de duas formas: via **linha de comando (curl)** ou via **Swagger UI (interface gráfica)**. Recomendamos usar o Swagger UI para exploração inicial, pois oferece documentação interativa e validação automática.
+
+### 📖 Acessando a Documentação Interativa
+
+**Swagger UI**: http://localhost:8000/docs
+**ReDoc**: http://localhost:8000/redoc
+
+---
+
 ### Verificar Status da API
 
+**Via curl:**
 ```bash
 curl http://localhost:8000/health/
 ```
 
+**Via Swagger:**
+1. Acesse http://localhost:8000/docs
+2. Localize `GET /health/`
+3. Clique em "Try it out" → "Execute"
+4. Visualize a resposta com status da API e conectividade do banco
+
+---
+
 ### Listar Livros (com paginação)
 
+**Via curl:**
 ```bash
 curl "http://localhost:8000/books/?page=1&per_page=10"
 ```
 
+**Via Swagger:**
+1. Acesse http://localhost:8000/docs
+2. Localize `GET /books/`
+3. Clique em "Try it out"
+4. Ajuste os parâmetros:
+   - `page`: 1
+   - `per_page`: 10
+5. Clique em "Execute"
+
 **Resposta de exemplo:**
 ```json
 {
-  "data": [...],
+  "data": [
+    {
+      "id": 1,
+      "title": "A Light in the Attic",
+      "price": "51.77",
+      "rating": 3,
+      "availability": true,
+      "category": "Poetry",
+      "image": "https://books.toscrape.com/media/cache/2c/da/2cdad67c44b002e7ead0cc35693c0e8b.jpg"
+    }
+  ],
   "page": 1,
   "per_page": 10,
   "total": 100,
@@ -156,22 +194,68 @@ curl "http://localhost:8000/books/?page=1&per_page=10"
 }
 ```
 
+---
+
 ### Buscar Livro por ID
 
+**Via curl:**
 ```bash
 curl "http://localhost:8000/books/1"
 ```
 
-### Buscar Livros por Título
-
-```bash
-curl "http://localhost:8000/books/search?title=python&page=1&per_page=10"
-```
+**Via Swagger:**
+1. Acesse http://localhost:8000/docs
+2. Localize `GET /books/{id}`
+3. Clique em "Try it out"
+4. Insira o `id` desejado (ex: 1)
+5. Clique em "Execute"
 
 **Resposta de exemplo:**
 ```json
 {
-  "data": [...],
+  "id": 1,
+  "title": "A Light in the Attic",
+  "price": "51.77",
+  "rating": 3,
+  "availability": true,
+  "category": "Poetry",
+  "image": "https://books.toscrape.com/media/cache/2c/da/2cdad67c44b002e7ead0cc35693c0e8b.jpg"
+}
+```
+
+---
+
+### Buscar Livros por Título
+
+**Via curl:**
+```bash
+curl "http://localhost:8000/books/search?title=python&page=1&per_page=10"
+```
+
+**Via Swagger:**
+1. Acesse http://localhost:8000/docs
+2. Localize `GET /books/search`
+3. Clique em "Try it out"
+4. Preencha os parâmetros:
+   - `title`: "python"
+   - `page`: 1
+   - `per_page`: 10
+5. Clique em "Execute"
+
+**Resposta de exemplo:**
+```json
+{
+  "data": [
+    {
+      "id": 23,
+      "title": "Learning Python",
+      "price": "30.23",
+      "rating": 4,
+      "availability": true,
+      "category": "Programming",
+      "image": "https://books.toscrape.com/media/cache/..."
+    }
+  ],
   "page": 1,
   "per_page": 10,
   "total": 15,
@@ -181,22 +265,51 @@ curl "http://localhost:8000/books/search?title=python&page=1&per_page=10"
 }
 ```
 
+---
+
 ### Buscar Livros por Categoria
 
+**Via curl:**
 ```bash
 curl "http://localhost:8000/books/search?category=Fiction&page=1&per_page=10"
 ```
 
+**Via Swagger:**
+1. Acesse http://localhost:8000/docs
+2. Localize `GET /books/search`
+3. Clique em "Try it out"
+4. Preencha:
+   - `category`: "Fiction"
+   - `page`: 1
+   - `per_page`: 10
+5. Clique em "Execute"
+
+---
+
 ### Listar Todas as Categorias
 
+**Via curl:**
 ```bash
 curl "http://localhost:8000/categories/?page=1&per_page=20"
 ```
 
+**Via Swagger:**
+1. Acesse http://localhost:8000/docs
+2. Localize `GET /categories/`
+3. Clique em "Try it out"
+4. Ajuste:
+   - `page`: 1
+   - `per_page`: 20
+5. Clique em "Execute"
+
 **Resposta de exemplo:**
 ```json
 {
-  "data": [...],
+  "data": [
+    {"name": "Travel", "count": 11},
+    {"name": "Mystery", "count": 32},
+    {"name": "Historical Fiction", "count": 14}
+  ],
   "page": 1,
   "per_page": 20,
   "total": 50,
@@ -206,11 +319,65 @@ curl "http://localhost:8000/categories/?page=1&per_page=20"
 }
 ```
 
+---
+
+### Disparar Processo de Scraping
+
+**Via curl:**
+```bash
+curl -X POST http://localhost:8000/scraping/trigger
+```
+
+**Via Swagger:**
+1. Acesse http://localhost:8000/docs
+2. Localize `POST /scraping/trigger`
+3. Clique em "Try it out"
+4. Clique em "Execute"
+5. Aguarde o processo concluir (pode levar alguns minutos)
+
+**Resposta de exemplo:**
+```json
+{
+  "status": "completed",
+  "total_books": 1000,
+  "total_categories": 50,
+  "csv_file": "data/books.csv",
+  "execution_time": "45.2s"
+}
+```
+
+---
+
 ### Verificar Status do Scraping
 
+**Via curl:**
 ```bash
 curl "http://localhost:8000/scraping/status"
 ```
+
+**Via Swagger:**
+1. Acesse http://localhost:8000/docs
+2. Localize `GET /scraping/status`
+3. Clique em "Try it out" → "Execute"
+
+**Resposta de exemplo:**
+```json
+{
+  "total_books": 1000,
+  "total_categories": 50,
+  "last_updated": "2025-10-21T14:30:00"
+}
+```
+
+---
+
+### 💡 Dicas para Usar o Swagger UI
+
+- **Schemas**: Role até o final da página do Swagger para ver todos os modelos de dados
+- **Validação**: O Swagger valida automaticamente os tipos de dados antes de enviar
+- **Exemplos**: Clique em "Schema" ao lado de "Example Value" para ver a estrutura completa
+- **Download**: Baixe a especificação OpenAPI em http://localhost:8000/openapi.json
+- **Autorização**: Quando implementada autenticação, use o botão "Authorize" no topo
 
 ## 📁 Estrutura do Projeto
 
