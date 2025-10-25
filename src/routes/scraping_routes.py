@@ -2,8 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from src.extensions import get_db
 from src.models.book import Book
+from src.models.user import User
 from src.services.scraping import scrape_all_books
 from src.services.scraping.file_handler import save_books_to_csv
+from src.services.auth.dependencies import get_current_active_user, require_admin
 from typing import Dict, Any
 import logging
 import pathlib
@@ -68,7 +70,8 @@ def save_books_to_db(db: Session, books_data: list[Dict[str, Any]]) -> int:
 @router.post("/trigger")
 def trigger_scraping(
     background_tasks: BackgroundTasks,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
 ) -> Dict[str, Any]:
     """
     Endpoint para disparar o scraping de livros e popular o banco de dados e CSV.
@@ -117,7 +120,10 @@ def trigger_scraping(
 
 
 @router.get("/status")
-def scraping_status(db: Session = Depends(get_db)) -> Dict[str, Any]:
+def scraping_status(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+) -> Dict[str, Any]:
     """
     Retorna o status atual do banco de dados de livros.
 

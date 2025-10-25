@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 
 from src.extensions import get_db
 from src.models.book import Book
+from src.models.user import User
+from src.services.auth.dependencies import get_current_active_user
 
 router = APIRouter(prefix="/categories", tags=["categories"])
 
@@ -15,6 +17,7 @@ def all_categories(
     page: int = Query(1, ge=1),
     per_page: int = Query(10, ge=1),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Lista todas as categorias de livros disponíveis com paginação.

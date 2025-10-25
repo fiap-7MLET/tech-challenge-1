@@ -3,14 +3,22 @@
 from fastapi import APIRouter, HTTPException, Query, Depends, status, Request
 from typing import Optional
 from src.models.book import Book
+from src.models.user import User
 from sqlalchemy.orm import Session
 from src.extensions import get_db
 from src.api.schemas.book import BookSchema
+from src.services.auth.dependencies import get_current_active_user
 
 router = APIRouter(prefix="/books", tags=["books"])
 
 @router.get("/", response_model=dict)
-def all_books(request: Request, page: int = Query(1, ge=1), per_page: int = Query(10, ge=1), db: Session = Depends(get_db)):
+def all_books(
+    request: Request,
+    page: int = Query(1, ge=1),
+    per_page: int = Query(10, ge=1),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
     """
     Lista todos os livros disponíveis no banco de dados com paginação.
 
@@ -49,7 +57,8 @@ def search(
     category: Optional[str] = Query(None),
     page: int = Query(1, ge=1),
     per_page: int = Query(10, ge=1),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Busca livros por título e/ou categoria com paginação.
@@ -89,17 +98,25 @@ def search(
     }
 
 @router.get("/top-rated", status_code=status.HTTP_501_NOT_IMPLEMENTED)
-def top_rated():
+def top_rated(current_user: User = Depends(get_current_active_user)):
     """Lista os livros com melhor avaliação (não implementado)."""
     return {"message": "Not implemented"}
 
 @router.get("/price-range", status_code=status.HTTP_501_NOT_IMPLEMENTED)
-def price_range(min: Optional[float] = Query(None), max: Optional[float] = Query(None)):
+def price_range(
+    min: Optional[float] = Query(None),
+    max: Optional[float] = Query(None),
+    current_user: User = Depends(get_current_active_user)
+):
     """Filtra livros dentro de uma faixa de preço específica (não implementado)."""
     return {"message": "Not implemented"}
 
 @router.get("/{book_id}", response_model=BookSchema)
-def single_book(book_id: int, db: Session = Depends(get_db)):
+def single_book(
+    book_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
     """
     Retorna os detalhes completos de um livro específico pelo ID.
 
