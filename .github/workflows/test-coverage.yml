@@ -32,6 +32,7 @@ jobs:
         run: |
           echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
           echo "DEBUG=True" >> .env
+          echo "SECRET_KEY=test-secret-key-for-ci-only-do-not-use-in-production" >> .env
           cat .env
 
       - name: run tests and generate html artifact 
