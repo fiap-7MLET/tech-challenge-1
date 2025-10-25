@@ -2,8 +2,18 @@
 	"info": {
 		"_postman_id": "tech-challenge-api-collection",
 		"name": "Tech Challenge API",
-		"description": "Complete API collection for the Tech Challenge FastAPI application",
+		"description": "Complete API collection for the Tech Challenge FastAPI application with JWT Authentication",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
 	},
 	"item": [
 		{
@@ -12,6 +22,9 @@
 				{
 					"name": "Health Check",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -24,7 +37,263 @@
 								""
 							]
 						},
-						"description": "Check API and database health status"
+						"description": "Check API and database health status (PUBLIC - No auth required)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+									"    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token);",
+									"    console.log(\"✅ Tokens saved to collection variables\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"AdminPass123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a new user. First user becomes admin automatically.\n\nPassword requirements:\n- Minimum 8 characters\n- At least 1 uppercase letter\n- At least 1 lowercase letter\n- At least 1 digit\n\nReturns access_token and refresh_token which are automatically saved to collection variables."
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+									"    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token);",
+									"    console.log(\"✅ Tokens saved to collection variables\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "admin@example.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "AdminPass123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login with existing user credentials (OAuth2 password flow).\n\nReturns access_token and refresh_token which are automatically saved to collection variables."
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+									"    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token);",
+									"    console.log(\"✅ New tokens saved to collection variables\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "Refresh access token using refresh token.\n\nReturns new access_token and refresh_token which are automatically saved to collection variables."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"me"
+							]
+						},
+						"description": "Get current authenticated user information.\n\nRequires: Valid access token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin Management",
+			"item": [
+				{
+					"name": "List All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"users"
+							]
+						},
+						"description": "List all registered users in the system.\n\n⚠️ Requires: Admin privileges\n\nReturns array of user objects with:\n- id\n- email\n- is_active\n- is_admin\n- created_at"
+					},
+					"response": []
+				},
+				{
+					"name": "Promote User to Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/users/2/promote",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"users",
+								"2",
+								"promote"
+							]
+						},
+						"description": "Promote a regular user to admin.\n\n⚠️ Requires: Admin privileges\n\nPath parameter:\n- user_id: ID of the user to promote (change '2' in URL)\n\nReturns updated user object.\n\nError cases:\n- 404: User not found\n- 400: User is already admin"
+					},
+					"response": []
+				},
+				{
+					"name": "Demote User from Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/users/2/demote",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"users",
+								"2",
+								"demote"
+							]
+						},
+						"description": "Demote an admin user to regular user.\n\n⚠️ Requires: Admin privileges\n\nPath parameter:\n- user_id: ID of the user to demote (change '2' in URL)\n\nReturns updated user object.\n\nError cases:\n- 404: User not found\n- 400: User is not admin\n- 400: Cannot demote yourself (prevents lockout)\n\n🔒 Security: Admins cannot demote themselves to prevent system lockout."
 					},
 					"response": []
 				}
@@ -56,11 +325,11 @@
 								{
 									"key": "per_page",
 									"value": "5",
-									"description": "Items per page (default: 5)"
+									"description": "Items per page (default: 10)"
 								}
 							]
 						},
-						"description": "Get paginated list of all books"
+						"description": "Get paginated list of all books.\n\nRequires: Authentication"
 					},
 					"response": []
 				},
@@ -79,17 +348,17 @@
 								"1"
 							]
 						},
-						"description": "Get a single book by its ID"
+						"description": "Get a single book by its ID.\n\nRequires: Authentication"
 					},
 					"response": []
 				},
 				{
-					"name": "Search Books",
+					"name": "Search Books by Title",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/books/search?title=&category=&page=1&per_page=5",
+							"raw": "{{base_url}}/books/search?title=python&page=1&per_page=5",
 							"host": [
 								"{{base_url}}"
 							],
@@ -100,13 +369,8 @@
 							"query": [
 								{
 									"key": "title",
-									"value": "",
-									"description": "Search by book title (optional)"
-								},
-								{
-									"key": "category",
-									"value": "",
-									"description": "Search by category (optional)"
+									"value": "python",
+									"description": "Search by book title (case-insensitive)"
 								},
 								{
 									"key": "page",
@@ -116,61 +380,47 @@
 								{
 									"key": "per_page",
 									"value": "5",
-									"description": "Items per page (default: 5)"
+									"description": "Items per page (default: 10)"
 								}
 							]
 						},
-						"description": "Search books by title and/or category with pagination"
+						"description": "Search books by title with pagination.\n\nRequires: Authentication"
 					},
 					"response": []
 				},
 				{
-					"name": "Get Top Rated Books",
+					"name": "Search Books by Category",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/books/top-rated",
+							"raw": "{{base_url}}/books/search?category=fiction&page=1&per_page=5",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"books",
-								"top-rated"
-							]
-						},
-						"description": "Get books with highest ratings (NOT IMPLEMENTED - returns 501)"
-					},
-					"response": []
-				},
-				{
-					"name": "Get Books by Price Range",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/books/price-range?min=10&max=50",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"books",
-								"price-range"
+								"search"
 							],
 							"query": [
 								{
-									"key": "min",
-									"value": "10",
-									"description": "Minimum price (optional)"
+									"key": "category",
+									"value": "fiction",
+									"description": "Search by category (case-insensitive, partial match)"
 								},
 								{
-									"key": "max",
-									"value": "50",
-									"description": "Maximum price (optional)"
+									"key": "page",
+									"value": "1",
+									"description": "Page number (default: 1)"
+								},
+								{
+									"key": "per_page",
+									"value": "5",
+									"description": "Items per page (default: 10)"
 								}
 							]
 						},
-						"description": "Filter books by price range (NOT IMPLEMENTED - returns 501)"
+						"description": "Search books by category with pagination.\n\nRequires: Authentication"
 					},
 					"response": []
 				}
@@ -185,7 +435,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/categories/?page=1&per_page=5",
+							"raw": "{{base_url}}/categories/?page=1&per_page=10",
 							"host": [
 								"{{base_url}}"
 							],
@@ -201,12 +451,12 @@
 								},
 								{
 									"key": "per_page",
-									"value": "5",
-									"description": "Items per page (default: 5)"
+									"value": "10",
+									"description": "Items per page (default: 10)"
 								}
 							]
 						},
-						"description": "Get paginated list of all book categories"
+						"description": "Get paginated list of all book categories.\n\nRequires: Authentication"
 					},
 					"response": []
 				}
@@ -216,7 +466,7 @@
 			"name": "Scraping",
 			"item": [
 				{
-					"name": "Trigger Scraping",
+					"name": "Trigger Scraping (Admin Only)",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -230,7 +480,7 @@
 								"trigger"
 							]
 						},
-						"description": "Trigger web scraping to collect book data and populate the database and CSV file"
+						"description": "Trigger web scraping to collect book data and populate the database and CSV file.\n\n⚠️ Requires: Admin privileges (first registered user or is_admin=true)\n\nThis process:\n1. Scrapes ~1000 books from books.toscrape.com\n2. Saves data to SQLite database\n3. Generates CSV file in data/books.csv\n4. Returns statistics"
 					},
 					"response": []
 				},
@@ -249,7 +499,7 @@
 								"status"
 							]
 						},
-						"description": "Get current database statistics and scraping status"
+						"description": "Get current database statistics and scraping status.\n\nRequires: Authentication"
 					},
 					"response": []
 				}
@@ -273,7 +523,7 @@
 								"overview"
 							]
 						},
-						"description": "Get general collection statistics: total books, average price, rating distribution (NOT IMPLEMENTED - returns 501)"
+						"description": "Get general collection statistics: total books, average price, rating distribution.\n\nRequires: Authentication\n\nStatus: Endpoint prepared (returns 501 Not Implemented)"
 					},
 					"response": []
 				},
@@ -292,7 +542,7 @@
 								"categories"
 							]
 						},
-						"description": "Get detailed statistics by category: book count, prices per category (NOT IMPLEMENTED - returns 501)"
+						"description": "Get detailed statistics by category: book count, prices per category.\n\nRequires: Authentication\n\nStatus: Endpoint prepared (returns 501 Not Implemented)"
 					},
 					"response": []
 				}
@@ -316,7 +566,7 @@
 								"features"
 							]
 						},
-						"description": "Get data formatted for ML model features (NOT IMPLEMENTED - returns 501)"
+						"description": "Get data formatted for ML model features.\n\nRequires: Authentication\n\nStatus: Endpoint prepared (returns 501 Not Implemented)"
 					},
 					"response": []
 				},
@@ -335,7 +585,7 @@
 								"training-data"
 							]
 						},
-						"description": "Get dataset for ML model training (NOT IMPLEMENTED - returns 501)"
+						"description": "Get dataset for ML model training.\n\nRequires: Authentication\n\nStatus: Endpoint prepared (returns 501 Not Implemented)"
 					},
 					"response": []
 				},
@@ -343,7 +593,16 @@
 					"name": "Post ML Predictions",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"features\": [1.0, 2.0, 3.0]\n}"
+						},
 						"url": {
 							"raw": "{{base_url}}/ml/predictions",
 							"host": [
@@ -354,88 +613,7 @@
 								"predictions"
 							]
 						},
-						"description": "Endpoint to receive ML model predictions (NOT IMPLEMENTED - returns 501)"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Auth",
-			"item": [
-				{
-					"name": "Register",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/auth/register",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"auth",
-								"register"
-							]
-						},
-						"description": "User registration endpoint (NOT IMPLEMENTED - returns 501)"
-					},
-					"response": []
-				},
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/auth/login",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"auth",
-								"login"
-							]
-						},
-						"description": "User login endpoint (NOT IMPLEMENTED - returns 501)"
-					},
-					"response": []
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/auth/logout",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"auth",
-								"logout"
-							]
-						},
-						"description": "User logout endpoint (NOT IMPLEMENTED - returns 501)"
-					},
-					"response": []
-				},
-				{
-					"name": "Refresh Token",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/auth/refresh",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"auth",
-								"refresh"
-							]
-						},
-						"description": "Token refresh endpoint (NOT IMPLEMENTED - returns 501)"
+						"description": "Endpoint to receive ML model predictions.\n\nRequires: Authentication\n\nStatus: Endpoint prepared (returns 501 Not Implemented)"
 					},
 					"response": []
 				}
@@ -446,6 +624,16 @@
 		{
 			"key": "base_url",
 			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
 			"type": "string"
 		}
 	]
