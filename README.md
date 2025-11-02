@@ -78,10 +78,20 @@ curl -X POST http://localhost:8000/scraping/trigger
 ```
 
 Este comando irá:
-1. Fazer scraping de aproximadamente 1000 livros do site books.toscrape.com
-2. Salvar os dados no banco de dados SQLite
-3. Gerar um arquivo CSV em `data/books.csv`
-4. Retornar estatísticas da operação
+1. **Iniciar o scraping em background** (retorna imediatamente com um `job_id`)
+2. Fazer scraping de aproximadamente 1000 livros do site books.toscrape.com
+3. Salvar os dados no banco de dados SQLite
+4. Gerar um arquivo CSV em `data/books.csv`
+
+Para acompanhar o progresso:
+
+```bash
+# Usando o job_id retornado
+curl "http://localhost:8000/scraping/status?job_id=1"
+
+# Ou verificar o último job
+curl "http://localhost:8000/scraping/status"
+```
 
 ## 🔧 Endpoints da API
 
@@ -104,9 +114,14 @@ Este comando irá:
   - Query params: `page` (default: 1), `per_page` (default: 10)
   - Resposta inclui URLs de navegação: `next`, `previous`
 
-#### Scraping
-- **POST** `/scraping/trigger` - Dispara o processo de scraping e popula o banco de dados
-- **GET** `/scraping/status` - Retorna estatísticas do banco de dados (total de livros, categorias, etc.)
+#### Scraping (Assíncrono)
+- **POST** `/scraping/trigger` - **Inicia** o processo de scraping em background (retorna imediatamente)
+  - Resposta inclui `job_id` para acompanhamento
+  - Previne execução de múltiplos jobs simultâneos
+- **GET** `/scraping/status` - Retorna status do scraping e estatísticas do banco de dados
+  - Query params opcionais: `job_id` (para consultar job específico)
+  - Retorna informações do último job se `job_id` não for fornecido
+  - Inclui: status do job (pending/in_progress/completed/error), progresso, timestamps
 
 ### Endpoints Opcionais (Bônus)
 
@@ -321,10 +336,11 @@ curl "http://localhost:8000/categories/?page=1&per_page=20"
 
 ---
 
-### Disparar Processo de Scraping
+### Disparar Processo de Scraping (Assíncrono)
 
 **Via curl:**
 ```bash
+# Inicia o scraping (retorna imediatamente)
 curl -X POST http://localhost:8000/scraping/trigger
 ```
 
@@ -333,16 +349,25 @@ curl -X POST http://localhost:8000/scraping/trigger
 2. Localize `POST /scraping/trigger`
 3. Clique em "Try it out"
 4. Clique em "Execute"
-5. Aguarde o processo concluir (pode levar alguns minutos)
+5. **Resposta é imediata** - não precisa aguardar
 
 **Resposta de exemplo:**
 ```json
 {
-  "status": "completed",
-  "total_books": 1000,
-  "total_categories": 50,
-  "csv_file": "data/books.csv",
-  "execution_time": "45.2s"
+  "status": "started",
+  "message": "Scraping iniciado em background",
+  "job_id": 1,
+  "check_status_url": "/scraping/status?job_id=1"
+}
+```
+
+**Se já existir um job em andamento:**
+```json
+{
+  "status": "already_running",
+  "message": "Já existe um job de scraping em andamento",
+  "job_id": 1,
+  "job_status": "in_progress"
 }
 ```
 
@@ -352,20 +377,80 @@ curl -X POST http://localhost:8000/scraping/trigger
 
 **Via curl:**
 ```bash
+# Verifica status de um job específico
+curl "http://localhost:8000/scraping/status?job_id=1"
+
+# Ou verifica o último job executado
 curl "http://localhost:8000/scraping/status"
 ```
 
 **Via Swagger:**
 1. Acesse http://localhost:8000/docs
 2. Localize `GET /scraping/status`
-3. Clique em "Try it out" → "Execute"
+3. Clique em "Try it out"
+4. (Opcional) Informe o `job_id`
+5. Clique em "Execute"
 
-**Resposta de exemplo:**
+**Resposta de exemplo (job em andamento):**
 ```json
 {
-  "total_books": 1000,
-  "total_categories": 50,
-  "last_updated": "2025-10-21T14:30:00"
+  "database": {
+    "total_books": 150,
+    "total_categories": 12,
+    "database_populated": true
+  },
+  "last_job": {
+    "job_id": 1,
+    "status": "in_progress",
+    "started_at": "2025-11-02T20:18:22.229239",
+    "completed_at": null,
+    "books_scraped": null,
+    "books_saved": null,
+    "csv_file": null,
+    "error_message": null
+  }
+}
+```
+
+**Resposta de exemplo (job concluído):**
+```json
+{
+  "database": {
+    "total_books": 999,
+    "total_categories": 50,
+    "database_populated": true
+  },
+  "last_job": {
+    "job_id": 1,
+    "status": "completed",
+    "started_at": "2025-11-02T20:18:22.229239",
+    "completed_at": "2025-11-02T20:18:52.755027",
+    "books_scraped": 1000,
+    "books_saved": 1000,
+    "csv_file": "data/books.csv",
+    "error_message": null
+  }
+}
+```
+
+**Resposta de exemplo (job com erro):**
+```json
+{
+  "database": {
+    "total_books": 0,
+    "total_categories": 0,
+    "database_populated": false
+  },
+  "last_job": {
+    "job_id": 1,
+    "status": "error",
+    "started_at": "2025-11-02T20:18:22.229239",
+    "completed_at": "2025-11-02T20:18:25.123456",
+    "books_scraped": null,
+    "books_saved": null,
+    "csv_file": null,
+    "error_message": "Connection timeout to books.toscrape.com"
+  }
 }
 ```
 
@@ -429,6 +514,21 @@ O projeto utiliza SQLite como banco de dados com a seguinte estrutura:
 - `category` (String) - Categoria do livro
 - `image` (String) - URL da imagem
 
+**Tabela: scraping_jobs**
+- `id` (Integer, PK) - Identificador único do job
+- `status` (String) - Status do job (pending, in_progress, completed, error)
+- `started_at` (DateTime) - Timestamp de início do job
+- `completed_at` (DateTime) - Timestamp de conclusão do job
+- `books_scraped` (Integer) - Número de livros coletados
+- `books_saved` (Integer) - Número de livros salvos no banco
+- `error_message` (Text) - Mensagem de erro se o job falhou
+- `csv_file` (String) - Caminho do arquivo CSV gerado
+
+**Tabela: users** (estrutura criada, endpoints não implementados)
+- `id` (Integer, PK) - Identificador único
+- `email` (String) - Email do usuário (único)
+- `password` (String) - Senha hash
+
 ### Gerenciamento do Banco
 
 O banco de dados é criado automaticamente na primeira execução em `db.sqlite3`.
@@ -437,11 +537,28 @@ O banco de dados é criado automaticamente na primeira execução em `db.sqlite3
 
 ### Características do Scraper
 
+- **Background Processing**: Executa em background com FastAPI BackgroundTasks
+- **Status Tracking**: Acompanhamento em tempo real do progresso via job tracking
 - **Assíncrono**: Utiliza `httpx` e `asyncio` para máxima performance
 - **Robusto**: Tratamento de erros e retry automático
 - **Completo**: Extrai todos os campos necessários (título, preço, rating, categoria, imagem)
 - **Escalável**: Processa múltiplas páginas em paralelo
 - **Logging**: Registra progresso e erros durante a execução
+- **Prevenção de Duplicatas**: Impede execução de múltiplos jobs simultâneos
+
+### Execução Assíncrona
+
+O scraping é executado de forma assíncrona, proporcionando:
+
+1. **Resposta Imediata**: A API retorna instantaneamente com um `job_id` ao invés de bloquear
+2. **Acompanhamento de Progresso**: Consulte o status a qualquer momento via `/scraping/status?job_id=X`
+3. **Estados do Job**:
+   - `pending`: Job criado e aguardando início
+   - `in_progress`: Scraping em andamento
+   - `completed`: Scraping finalizado com sucesso
+   - `error`: Erro durante o scraping (com mensagem detalhada)
+4. **Proteção Contra Concorrência**: Sistema impede múltiplos jobs simultâneos
+5. **Persistência**: Histórico de jobs mantido no banco de dados
 
 ### Fonte de Dados
 
