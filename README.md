@@ -58,6 +58,19 @@ DEBUG=False
 
 ## 🏃 Como Executar
 
+### Aplicar Migrations do Banco de Dados
+
+**IMPORTANTE**: Antes de iniciar a aplicação pela primeira vez, você deve aplicar as migrations do banco de dados:
+
+```bash
+uv run alembic upgrade head
+```
+
+Este comando irá:
+1. Criar o arquivo de banco de dados SQLite (`db.sqlite3`)
+2. Criar todas as tabelas necessárias (books, users, scraping_jobs)
+3. Configurar o versionamento do esquema do banco
+
 ### Iniciar o Servidor de Desenvolvimento
 
 ```bash
@@ -531,7 +544,20 @@ O projeto utiliza SQLite como banco de dados com a seguinte estrutura:
 
 ### Gerenciamento do Banco
 
-O banco de dados é criado automaticamente na primeira execução em `db.sqlite3`.
+O banco de dados é gerenciado através do Alembic (migrations). Para criar ou atualizar o banco de dados, execute:
+
+```bash
+# Aplicar todas as migrations
+uv run alembic upgrade head
+
+# Verificar versão atual do banco
+uv run alembic current
+
+# Ver histórico de migrations
+uv run alembic history
+```
+
+O arquivo do banco é criado em `db.sqlite3` após a primeira execução das migrations.
 
 ## 🕷️ Web Scraping
 
