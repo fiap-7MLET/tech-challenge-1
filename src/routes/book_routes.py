@@ -110,7 +110,7 @@ def single_book(book_id: int, db: Session = Depends(get_db)):
     Returns:
         BookSchema: Detalhes do livro
 
-    Lança:
+    Raises:
         HTTPException: 404 se o livro não for encontrado
     """
     book = db.query(Book).filter_by(id=book_id).first()
