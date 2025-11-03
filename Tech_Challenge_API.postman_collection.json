@@ -230,12 +230,12 @@
 								"trigger"
 							]
 						},
-						"description": "Trigger web scraping to collect book data and populate the database and CSV file"
+						"description": "Trigger async web scraping to collect book data. Returns immediately with job ID. Use /scraping/status to check progress."
 					},
 					"response": []
 				},
 				{
-					"name": "Get Scraping Status",
+					"name": "Get Scraping Status (Latest)",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -249,7 +249,33 @@
 								"status"
 							]
 						},
-						"description": "Get current database statistics and scraping status"
+						"description": "Get database statistics and latest scraping job status (pending, in_progress, completed, or error)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Scraping Status by Job ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/scraping/status?job_id=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"scraping",
+								"status"
+							],
+							"query": [
+								{
+									"key": "job_id",
+									"value": "1",
+									"description": "Specific job ID to query (optional, returns latest if omitted)"
+								}
+							]
+						},
+						"description": "Get database statistics and specific scraping job status by job ID"
 					},
 					"response": []
 				}

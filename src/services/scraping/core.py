@@ -1,9 +1,11 @@
-import httpx
 import asyncio
 import logging
-from bs4 import BeautifulSoup
+from enum import IntEnum
+from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin
-from typing import Optional, Dict, Any, List
+
+import httpx
+from bs4 import BeautifulSoup
 
 
 def clean_title(title: str) -> str:
@@ -18,25 +20,30 @@ logging.basicConfig(
 
 BASE_URL = "https://books.toscrape.com/"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    )
 }
 
-RATING_MAP = {
-    "One": 1,
-    "Two": 2,
-    "Three": 3,
-    "Four": 4,
-    "Five": 5,
-}
+
+class Rating(IntEnum):
+    """Enum para mapear classificações de estrelas para valores numéricos."""
+
+    ONE = 1
+    TWO = 2
+    THREE = 3
+    FOUR = 4
+    FIVE = 5
 
 
 async def fetch_page(client: httpx.AsyncClient, url: str) -> Optional[str]:
     """Busca o conteúdo de uma única página de forma assíncrona.
-    
+
     Args:
         client: Cliente HTTP assíncrono
         url: URL da página a ser buscada
-        
+
     Returns:
         O conteúdo HTML da página ou None em caso de erro
     """
@@ -49,15 +56,13 @@ async def fetch_page(client: httpx.AsyncClient, url: str) -> Optional[str]:
         return None
 
 
-def parse_book_details(
-    html_content: str, book_url: str
-) -> Optional[Dict[str, Any]]:
+def parse_book_details(html_content: str, book_url: str) -> Optional[Dict[str, Any]]:
     """Analisa os detalhes de um livro a partir do conteúdo HTML de sua página.
-    
+
     Args:
         html_content: Conteúdo HTML da página do livro
         book_url: URL da página do livro (usado para logging em caso de erro)
-        
+
     Returns:
         Dicionário com os detalhes do livro ou None em caso de erro
     """
@@ -69,12 +74,10 @@ def parse_book_details(
 
         rating_tag = soup.find("p", class_="star-rating")
         rating_class = rating_tag["class"][-1] if rating_tag else "Zero"
-        rating = RATING_MAP.get(rating_class, 0)
+        rating = getattr(Rating, rating_class.upper(), 0)
 
         availability_tag = soup.find("p", class_="instock availability")
-        availability = (
-            availability_tag.text.strip() if availability_tag else "N/A"
-        )
+        availability = availability_tag.text.strip() if availability_tag else "N/A"
 
         category_tag = soup.select_one("ul.breadcrumb li:nth-of-type(3) a")
         category = category_tag.text.strip() if category_tag else "N/A"
@@ -100,11 +103,11 @@ async def scrape_book_task(
     client: httpx.AsyncClient, book_url: str
 ) -> Optional[Dict[str, Any]]:
     """Tarefa assíncrona para buscar e analisar os detalhes de um único livro.
-    
+
     Args:
         client: Cliente HTTP assíncrono
         book_url: URL da página do livro
-        
+
     Returns:
         Dicionário com os detalhes do livro ou None em caso de erro
     """
@@ -116,15 +119,15 @@ async def scrape_book_task(
 
 async def scrape_all_books_async() -> List[Dict[str, Any]]:
     """Lógica principal de scraping assíncrono para todos os livros.
-    
+
     Busca todas as páginas do catálogo de forma assíncrona e coleta os detalhes
     de cada livro encontrado.
-    
+
     Returns:
         Lista de dicionários, onde cada dicionário contém os detalhes de um livro
     """
     all_books_data = []
-    current_url = urljoin(BASE_URL, "catalogue/page-1.html")
+    current_url: Optional[str] = urljoin(BASE_URL, "catalogue/page-1.html")
 
     async with httpx.AsyncClient() as client:
         while current_url:
@@ -135,9 +138,7 @@ async def scrape_all_books_async() -> List[Dict[str, Any]]:
                 break
 
             soup = BeautifulSoup(main_page_content, "html.parser")
-            book_links = [
-                urljoin(current_url, a["href"]) for a in soup.select("h3 a")
-            ]
+            book_links = [urljoin(current_url, a["href"]) for a in soup.select("h3 a")]
 
             tasks = [scrape_book_task(client, link) for link in book_links]
             results = await asyncio.gather(*tasks)
@@ -149,7 +150,9 @@ async def scrape_all_books_async() -> List[Dict[str, Any]]:
             if next_page_tag and next_page_tag.has_attr("href"):
                 current_url = urljoin(current_url, next_page_tag["href"])
             else:
-                logging.info("Coleta de dados concluída. Todas as páginas foram processadas.")
+                logging.info(
+                    "Coleta de dados concluída. Todas as páginas foram processadas."
+                )
                 current_url = None
 
     return all_books_data
@@ -157,10 +160,10 @@ async def scrape_all_books_async() -> List[Dict[str, Any]]:
 
 def scrape_all_books() -> List[Dict[str, Any]]:
     """Wrapper síncrono para o scraper assíncrono.
-    
+
     Esta função é o ponto de entrada principal para o scraping,
     encapsulando toda a lógica assíncrona em uma interface síncrona.
-    
+
     Returns:
         Lista de dicionários, onde cada dicionário contém os detalhes de um livro
     """

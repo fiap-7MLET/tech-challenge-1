@@ -1,16 +1,24 @@
 """Rotas para consulta e pesquisa de livros."""
 
-from fastapi import APIRouter, HTTPException, Query, Depends, status, Request
 from typing import Optional
-from src.models.book import Book
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy.orm import Session
-from src.extensions import get_db
+
 from src.api.schemas.book import BookSchema
+from src.extensions import get_db
+from src.models.book import Book
 
 router = APIRouter(prefix="/books", tags=["books"])
 
+
 @router.get("/", response_model=dict)
-def all_books(request: Request, page: int = Query(1, ge=1), per_page: int = Query(10, ge=1), db: Session = Depends(get_db)):
+def all_books(
+    request: Request,
+    page: int = Query(1, ge=1),
+    per_page: int = Query(10, ge=1),
+    db: Session = Depends(get_db),
+):
     """
     Lista todos os livros disponíveis no banco de dados com paginação.
 
@@ -29,7 +37,11 @@ def all_books(request: Request, page: int = Query(1, ge=1), per_page: int = Quer
     total_pages = (total // per_page) + (1 if total % per_page else 0)
 
     base_url = str(request.url.remove_query_params(["page"]))
-    next_url = f"{base_url}?page={page + 1}&per_page={per_page}" if page < total_pages else None
+    next_url = (
+        f"{base_url}?page={page + 1}&per_page={per_page}"
+        if page < total_pages
+        else None
+    )
     prev_url = f"{base_url}?page={page - 1}&per_page={per_page}" if page > 1 else None
 
     return {
@@ -39,8 +51,9 @@ def all_books(request: Request, page: int = Query(1, ge=1), per_page: int = Quer
         "total": total,
         "pages": total_pages,
         "next": next_url,
-        "previous": prev_url
+        "previous": prev_url,
     }
+
 
 @router.get("/search", response_model=dict)
 def search(
@@ -49,7 +62,7 @@ def search(
     category: Optional[str] = Query(None),
     page: int = Query(1, ge=1),
     per_page: int = Query(10, ge=1),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Busca livros por título e/ou categoria com paginação.
@@ -85,18 +98,21 @@ def search(
         "total": total,
         "pages": total_pages,
         "next": next_url,
-        "previous": prev_url
+        "previous": prev_url,
     }
+
 
 @router.get("/top-rated", status_code=status.HTTP_501_NOT_IMPLEMENTED)
 def top_rated():
     """Lista os livros com melhor avaliação (não implementado)."""
     return {"message": "Not implemented"}
 
+
 @router.get("/price-range", status_code=status.HTTP_501_NOT_IMPLEMENTED)
 def price_range(min: Optional[float] = Query(None), max: Optional[float] = Query(None)):
     """Filtra livros dentro de uma faixa de preço específica (não implementado)."""
     return {"message": "Not implemented"}
+
 
 @router.get("/{book_id}", response_model=BookSchema)
 def single_book(book_id: int, db: Session = Depends(get_db)):

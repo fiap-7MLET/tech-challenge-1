@@ -2,10 +2,12 @@
 
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
+from sqlalchemy import literal_column, select
+
 from src.extensions import SessionLocal
-from sqlalchemy import select, literal_column
 
 router = APIRouter(prefix="/health", tags=["health"])
+
 
 @router.get("/")
 def health():
@@ -27,9 +29,8 @@ def health():
         db_status = f"[DB Health Error] {e}"
         error = True
     return JSONResponse(
-        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR if error else status.HTTP_200_OK,
-        content={
-            "status": status_,
-            "database": db_status
-        }
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        if error
+        else status.HTTP_200_OK,
+        content={"status": status_, "database": db_status},
     )

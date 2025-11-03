@@ -1,7 +1,9 @@
 """Schemas Pydantic para validação de dados da API."""
 
-from pydantic import BaseModel, ConfigDict
 from typing import Optional
+
+from pydantic import BaseModel, ConfigDict
+
 
 class BookSchema(BaseModel):
     """
@@ -16,6 +18,7 @@ class BookSchema(BaseModel):
         category: Categoria do livro
         image: URL da imagem do livro
     """
+
     model_config = ConfigDict(from_attributes=True)
 
     id: Optional[int] = None
@@ -26,8 +29,10 @@ class BookSchema(BaseModel):
     category: str
     image: Optional[str] = None
 
+
 class UserSchema(BaseModel):
     """Schema para representação de um usuário na API."""
+
     model_config = ConfigDict(from_attributes=True)
 
     id: Optional[int] = None
