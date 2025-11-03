@@ -1,14 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+import logging
+import pathlib
+from datetime import datetime, timezone
+from typing import Any, Dict
+
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
+
 from src.extensions import get_db
 from src.models.book import Book
 from src.models.scraping_job import ScrapingJob
 from src.services.scraping import scrape_all_books
 from src.services.scraping.file_handler import save_books_to_csv
-from typing import Dict, Any
-from datetime import datetime, timezone
-import logging
-import pathlib
 
 router = APIRouter(prefix="/scraping", tags=["scraping"])
 
@@ -24,6 +26,7 @@ def run_scraping_job(job_id: int):
         job_id: ID do job de scraping
     """
     from src.extensions import SessionLocal
+
     db = SessionLocal()
 
     try:
@@ -100,15 +103,17 @@ def save_books_to_db(db: Session, books_data: list[Dict[str, Any]]) -> int:
     for book_data in books_data:
         try:
             # Verifica se o livro já existe
-            existing_book = db.query(Book).filter(
-                Book.title == book_data["title"]
-            ).first()
+            existing_book = (
+                db.query(Book).filter(Book.title == book_data["title"]).first()
+            )
 
             if existing_book:
                 # Atualiza o livro existente
                 existing_book.price = book_data["price"]
                 existing_book.rating = book_data["rating"]
-                existing_book.availability = "In stock" in book_data.get("availability", "")
+                existing_book.availability = "In stock" in book_data.get(
+                    "availability", ""
+                )
                 existing_book.category = book_data["category"]
                 existing_book.image = book_data.get("image_url")
                 db.commit()
@@ -120,7 +125,7 @@ def save_books_to_db(db: Session, books_data: list[Dict[str, Any]]) -> int:
                     rating=book_data["rating"],
                     availability="In stock" in book_data.get("availability", ""),
                     category=book_data["category"],
-                    image=book_data.get("image_url")
+                    image=book_data.get("image_url"),
                 )
                 db.add(new_book)
                 db.commit()
@@ -128,7 +133,9 @@ def save_books_to_db(db: Session, books_data: list[Dict[str, Any]]) -> int:
             saved_count += 1
 
         except Exception as e:
-            logger.error(f"Erro ao salvar livro '{book_data.get('title', 'unknown')}': {e}")
+            logger.error(
+                f"Erro ao salvar livro '{book_data.get('title', 'unknown')}': {e}"
+            )
             db.rollback()
             continue
 
@@ -137,8 +144,7 @@ def save_books_to_db(db: Session, books_data: list[Dict[str, Any]]) -> int:
 
 @router.post("/trigger")
 def trigger_scraping(
-    background_tasks: BackgroundTasks,
-    db: Session = Depends(get_db)
+    background_tasks: BackgroundTasks, db: Session = Depends(get_db)
 ) -> Dict[str, Any]:
     """
     Endpoint para disparar o scraping de livros de forma assíncrona.
@@ -151,23 +157,22 @@ def trigger_scraping(
     """
     try:
         # Verifica se já existe um job em andamento
-        active_job = db.query(ScrapingJob).filter(
-            ScrapingJob.status.in_(["pending", "in_progress"])
-        ).first()
+        active_job = (
+            db.query(ScrapingJob)
+            .filter(ScrapingJob.status.in_(["pending", "in_progress"]))
+            .first()
+        )
 
         if active_job:
             return {
                 "status": "already_running",
                 "message": "Já existe um job de scraping em andamento",
                 "job_id": active_job.id,
-                "job_status": active_job.status
+                "job_status": active_job.status,
             }
 
         # Cria um novo job
-        new_job = ScrapingJob(
-            status="pending",
-            started_at=datetime.now(timezone.utc)
-        )
+        new_job = ScrapingJob(status="pending", started_at=datetime.now(timezone.utc))
         db.add(new_job)
         db.commit()
         db.refresh(new_job)
@@ -181,21 +186,19 @@ def trigger_scraping(
             "status": "started",
             "message": "Scraping iniciado em background",
             "job_id": new_job.id,
-            "check_status_url": f"/scraping/status?job_id={new_job.id}"
+            "check_status_url": f"/scraping/status?job_id={new_job.id}",
         }
 
     except Exception as e:
         logger.error(f"Erro ao criar job de scraping: {e}")
         raise HTTPException(
-            status_code=500,
-            detail=f"Erro ao criar job de scraping: {str(e)}"
+            status_code=500, detail=f"Erro ao criar job de scraping: {str(e)}"
         )
 
 
 @router.get("/status")
 def scraping_status(
-    job_id: int = None,
-    db: Session = Depends(get_db)
+    job_id: int = None, db: Session = Depends(get_db)
 ) -> Dict[str, Any]:
     """
     Retorna o status do scraping.
@@ -217,11 +220,11 @@ def scraping_status(
         # Pega o job mais recente
         job = db.query(ScrapingJob).order_by(ScrapingJob.started_at.desc()).first()
 
-    response = {
+    response: Dict[str, Any] = {
         "database": {
             "total_books": total_books,
             "total_categories": total_categories,
-            "database_populated": total_books > 0
+            "database_populated": total_books > 0,
         }
     }
 
@@ -234,7 +237,7 @@ def scraping_status(
             "books_scraped": job.books_scraped,
             "books_saved": job.books_saved,
             "csv_file": job.csv_file,
-            "error_message": job.error_message
+            "error_message": job.error_message,
         }
         response["last_job"] = job_info
     else:

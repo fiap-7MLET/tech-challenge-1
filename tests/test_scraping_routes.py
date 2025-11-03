@@ -1,5 +1,5 @@
 """Testes para rotas de scraping assíncrono."""
-import pytest
+
 from src.models.scraping_job import ScrapingJob
 from unittest.mock import patch
 
@@ -20,7 +20,7 @@ def test_scraping_status_empty_database(client):
 
 def test_scraping_trigger_returns_immediately(client):
     """Testa que /scraping/trigger retorna imediatamente com ID do job."""
-    with patch('src.routes.scraping_routes.scrape_all_books') as mock_scrape:
+    with patch("src.routes.scraping_routes.scrape_all_books") as mock_scrape:
         # Simula a função de scraping para evitar scraping real
         mock_scrape.return_value = []
 
@@ -36,7 +36,7 @@ def test_scraping_trigger_returns_immediately(client):
 
 def test_scraping_trigger_creates_job(client, db):
     """Testa que /scraping/trigger cria um job no banco de dados."""
-    with patch('src.routes.scraping_routes.scrape_all_books') as mock_scrape:
+    with patch("src.routes.scraping_routes.scrape_all_books") as mock_scrape:
         mock_scrape.return_value = []
 
         response = client.post("/scraping/trigger")
@@ -53,7 +53,7 @@ def test_scraping_trigger_creates_job(client, db):
 
 def test_scraping_prevents_concurrent_jobs(client):
     """Testa que apenas um job de scraping pode executar por vez."""
-    with patch('src.routes.scraping_routes.scrape_all_books') as mock_scrape:
+    with patch("src.routes.scraping_routes.scrape_all_books") as mock_scrape:
         mock_scrape.return_value = []
 
         # Cria primeiro job
@@ -76,7 +76,7 @@ def test_scraping_status_with_job_id(client, db):
         status="completed",
         books_scraped=100,
         books_saved=100,
-        csv_file="data/books.csv"
+        csv_file="data/books.csv",
     )
     db.add(job)
     db.commit()
@@ -179,7 +179,7 @@ def test_completed_job_has_timestamps(db):
         started_at=datetime.now(timezone.utc),
         completed_at=datetime.now(timezone.utc),
         books_scraped=100,
-        books_saved=100
+        books_saved=100,
     )
     db.add(job)
     db.commit()
@@ -192,10 +192,7 @@ def test_completed_job_has_timestamps(db):
 
 def test_error_job_has_error_message(client, db):
     """Testa que um job com erro inclui mensagem de erro."""
-    job = ScrapingJob(
-        status="error",
-        error_message="Timeout de conexão"
-    )
+    job = ScrapingJob(status="error", error_message="Timeout de conexão")
     db.add(job)
     db.commit()
     db.refresh(job)

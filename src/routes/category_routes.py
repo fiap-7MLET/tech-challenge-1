@@ -35,7 +35,11 @@ def all_categories(
     total_pages = (total // per_page) + (1 if total % per_page else 0)
 
     base_url = str(request.url.remove_query_params(["page"]))
-    next_url = f"{base_url}?page={page + 1}&per_page={per_page}" if page < total_pages else None
+    next_url = (
+        f"{base_url}?page={page + 1}&per_page={per_page}"
+        if page < total_pages
+        else None
+    )
     prev_url = f"{base_url}?page={page - 1}&per_page={per_page}" if page > 1 else None
 
     return {

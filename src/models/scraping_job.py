@@ -1,11 +1,13 @@
 """Modelo de dados para jobs de scraping."""
 
-from sqlalchemy import Column, Integer, String, DateTime, Text
 from datetime import datetime, timezone
+
+from sqlalchemy import Column, DateTime, Integer, String, Text
+
 from src.models import Base
 
 
-class ScrapingJob(Base):
+class ScrapingJob(Base):  # type: ignore[valid-type, misc]
     """
     Modelo representando um job de scraping no banco de dados.
 
@@ -19,11 +21,16 @@ class ScrapingJob(Base):
         error_message: Mensagem de erro se o job falhou
         csv_file: Caminho do arquivo CSV gerado
     """
+
     __tablename__ = "scraping_jobs"
 
     id = Column(Integer, primary_key=True)
-    status = Column(String(20), nullable=False, default="pending")  # pending, in_progress, completed, error
-    started_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+    status = Column(
+        String(20), nullable=False, default="pending"
+    )  # pending, in_progress, completed, error
+    started_at = Column(
+        DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)
+    )
     completed_at = Column(DateTime, nullable=True)
     books_scraped = Column(Integer, nullable=True)
     books_saved = Column(Integer, nullable=True)

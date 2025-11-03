@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from src.app import app
-from src.models import Base, Book, User, ScrapingJob
+from src.models import Base
 from src.extensions import get_db
 
 # Cria banco de dados de teste compartilhado

@@ -1,9 +1,11 @@
 """Modelo de dados para livros."""
 
-from sqlalchemy import Column, Integer, String, Numeric, Boolean
+from sqlalchemy import Boolean, Column, Integer, Numeric, String
+
 from src.models import Base
 
-class Book(Base):
+
+class Book(Base):  # type: ignore[valid-type, misc]
     """
     Modelo representando um livro no banco de dados.
 
@@ -16,10 +18,11 @@ class Book(Base):
         category: Categoria do livro
         image: URL da imagem do livro
     """
+
     __tablename__ = "books"
     id = Column(Integer, primary_key=True)
     title = Column(String(120), unique=True, nullable=False)
-    price = Column(Numeric(8,2), nullable=False)
+    price = Column(Numeric(8, 2), nullable=False)
     rating = Column(Integer, nullable=False)
     availability = Column(Boolean, nullable=False, default=True)
     category = Column(String(120), nullable=False)

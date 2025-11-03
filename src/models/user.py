@@ -1,9 +1,11 @@
 """Modelo de dados para usuários."""
 
 from sqlalchemy import Column, Integer, String
+
 from src.models import Base
 
-class User(Base):
+
+class User(Base):  # type: ignore[valid-type, misc]
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     email = Column(String(120), unique=True, nullable=False)
