@@ -4,6 +4,7 @@ import logging
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from typing import Optional, Dict, Any, List
+from enum import IntEnum
 
 
 def clean_title(title: str) -> str:
@@ -21,13 +22,14 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
 }
 
-RATING_MAP = {
-    "One": 1,
-    "Two": 2,
-    "Three": 3,
-    "Four": 4,
-    "Five": 5,
-}
+
+class Rating(IntEnum):
+    """Enum para mapear classificações de estrelas para valores numéricos."""
+    ONE = 1
+    TWO = 2
+    THREE = 3
+    FOUR = 4
+    FIVE = 5
 
 
 async def fetch_page(client: httpx.AsyncClient, url: str) -> Optional[str]:
@@ -69,7 +71,7 @@ def parse_book_details(
 
         rating_tag = soup.find("p", class_="star-rating")
         rating_class = rating_tag["class"][-1] if rating_tag else "Zero"
-        rating = RATING_MAP.get(rating_class, 0)
+        rating = getattr(Rating, rating_class.upper(), 0)
 
         availability_tag = soup.find("p", class_="instock availability")
         availability = (
