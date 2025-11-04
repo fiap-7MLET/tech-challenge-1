@@ -1,42 +1,64 @@
 # Tech Challenge 1 - API de Consulta de Livros
-Projeto desenvolvido para o Tech Challenge da Fase 1 da Pós-Tech FIAP em Machine Learning Engineering.
+Projeto desenvolvido para o Tech Challenge da Fase 1 da Pós-Tech FIAP em Machine Learning Engineering acessível no Repositório Público do Github em [https://github.com/fiap-7MLET/tech-challenge-1](https://github.com/fiap-7MLET/tech-challenge-1).
+
+---
 
 <details>
 <summary><strong>🗂 SUMÁRIO</strong></summary>
 
-- [📋 Sobre o Projeto](#-sobre-o-projeto)
-- [🎯 Objetivos do Projeto](#-objetivos-do-projeto)
-- [🚀 Tecnologias Utilizadas](#-tecnologias-utilizadas)
-- [📦 Instalação e Configuração](#-instalação-e-configuração)
-- [🏃 Como Executar](#-como-executar)
-- [🔧 Endpoints da API](#-endpoints-da-api)
-  - [Endpoints Principais (Obrigatórios)](#endpoints-principais-obrigatórios)
-  - [Endpoints Opcionais (Bônus)](#endpoints-opcionais-bônus)
-- [🌐 Exemplos de Uso](#-exemplos-de-uso)
-- [📁 Estrutura do Projeto](#-estrutura-do-projeto)
-- [🗄️ Banco de Dados](#-banco-de-dados)
-- [🕷️ Web Scraping](#-web-scraping)
-- [🧪 Testes](#-testes)
-- [📊 Coleção Postman](#-coleção-postman)
-- [🏗️ Arquitetura e Pipeline de Dados](#-arquitetura-e-pipeline-de-dados)
-- [🎓 Cenário de Uso para ML](#-cenário-de-uso-para-ml)
-- [👥 Equipe](#-equipe)
-- [📄 Licença](#-licença)
+- [👥 Equipe](#-equipe-)
+- [📋 Sobre o Projeto](#-sobre-o-projeto-)
+- [🎯 Objetivos do Projeto](#-objetivos-do-projeto-)
+- [🚀 Tecnologias Utilizadas](#-tecnologias-utilizadas-)
+- [🌐 API Pública](#-api-pública-)
+- [💾 Entregáveis Adicionais](#-entregáveis-adicionais-)
+  - [🎥 Apresentação em Vídeo](#-apresentação-em-vídeo-)
+  - [🎞️ Apresentação de Slides](#️-apresentação-de-slides-)
+  - [📊 Coleção Postman](#-coleção-postman-)
+- [📦 Instalação e Configuração](#-instalação-e-configuração-)
+- [🏃 Como Executar](#-como-executar-)
+- [🔧 Endpoints da API](#-endpoints-da-api-)
+  - [Endpoints Principais (Obrigatórios)](#endpoints-principais-obrigatórios-)
+  - [Endpoints Opcionais (Bônus)](#endpoints-opcionais-bônus-)
+- [🌐 Exemplos de Uso](#-exemplos-de-uso-)
+- [📁 Estrutura do Projeto](#-estrutura-do-projeto-)
+- [🗄️ Banco de Dados](#️-banco-de-dados-)
+- [🕷️ Web Scraping](#️-web-scraping-)
+- [🧪 Testes](#-testes-)
+- [🏗️ Arquitetura e Pipeline de Dados](#️-arquitetura-e-pipeline-de-dados-)
+- [🏗️ CI/CD](#cicd-)
+- [🎓 Cenário de Uso para ML](#-cenário-de-uso-para-ml-)
+- [📄 Licença](#-licença-)
 </details>
 
 ---
-## 📋 Sobre o Projeto
+## 👥 Equipe [↑](#tech-challenge-1---api-de-consulta-de-livros)
+
+Desenvolvido como parte do Tech Challenge - Fase 1
+Pós-Tech FIAP - Machine Learning Engineering
+
+| Nome Completo | RM | Google Skills | Github |
+|---------------|----|--------------------|-------------|
+| Allan Vital | RM369068 | [Badge](https://www.skills.google/public_profiles/6336cac1-9227-4eeb-969e-dedafd67c003) | [@vitallan](https://github.com/vitallan) |
+| Beatriz Mendonça | RM367076 | [Badge](https://www.skills.google/public_profiles/7a5f64c0-9f90-4302-afaa-2f6024bdae53) | [@beamendon](https://github.com/beamendon) |
+| Fernando Nunes | RM368361 | [Badge](https://www.skills.google/public_profiles/eef5e153-41c5-497d-bfd5-8f69ab2f1883) | [@fernandoleitao](https://github.com/fernandoleitao) |
+| Nhaiara Moura | RM368096 | [Badge](https://www.skills.google/public_profiles/f1ae1664-8b59-4214-bbf9-086a19dc8faa) | [@nhaiara](https://github.com/nhaiara) |
+| Rafael Melazzo | RM368728 | [Badge](https://www.skills.google/public_profiles/86e31f1d-0273-482f-af15-00e559df7961) | [@rafaelmelazzo](https://github.com/rafaelmelazzo) |
+
+## 📋 Sobre o Projeto [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 API REST pública desenvolvida com FastAPI para gerenciamento e consulta de catálogo de livros. O projeto inclui funcionalidade completa de web scraping para coleta automática de dados do site [books.toscrape.com](https://books.toscrape.com/), armazenamento em banco de dados SQLite e disponibilização via endpoints RESTful.
 
-## 🎯 Objetivos do Projeto
+
+## 🎯 Objetivos do Projeto [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 - Desenvolver um pipeline completo de extração, transformação e disponibilização de dados
 - Criar uma API pública escalável e reusável para futuros modelos de Machine Learning
 - Implementar web scraping robusto com processamento assíncrono
 - Fornecer endpoints RESTful bem documentados e testados
+- Apresentar o projeto em vídeo
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Tecnologias Utilizadas [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 - **FastAPI** - Framework web moderno e rápido para construção de APIs
 - **SQLAlchemy** - ORM para gerenciamento do banco de dados
@@ -47,11 +69,27 @@ API REST pública desenvolvida com FastAPI para gerenciamento e consulta de cat�
 - **Pytest** - Framework de testes
 - **uv** - Gerenciador moderno de dependências e ambientes virtuais Python
 
-## 🌐 API Pública
+## 🌐 API Pública [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 - [https://tech-challenge-1-7zyn.onrender.com/docs](https://tech-challenge-1-7zyn.onrender.com/docs)
 
-## 📦 Instalação e Configuração
+## 💾 Entregáveis Adicionais [↑](#tech-challenge-1---api-de-consulta-de-livros)
+
+- ### 🎥 Apresentação em Vídeo [↑](#tech-challenge-1---api-de-consulta-de-livros)
+  - Veja os detalhes e explicação sobre o nosso projeto na nossa [apresentação em vídeo](https://drive.google.com/file/d/1RqUlpd3zPc5sA--CU2jniGa7yYpYW_nc/view).
+
+- ### 🎞️ Apresentação de Slides [↑](#tech-challenge-1---api-de-consulta-de-livros)
+  - Acesse os slides [aqui](https://docs.google.com/presentation/d/1HfFd1JdZnVFsXir5gKII77OlkZJQyAfkj0i3a_KLE_U/edit?usp=sharing).
+
+- ### 📊 Coleção Postman [↑](#tech-challenge-1---api-de-consulta-de-livros)
+  Uma coleção Postman completa está disponível em `Tech_Challenge_API.postman_collection.json` com todos os endpoints configurados e exemplos de requisições.
+  #### Importar no Postman
+    1. Abra o Postman
+    2. Clique em "Import"
+    3. Selecione o arquivo `Tech_Challenge_API.postman_collection.json`
+    4. A coleção estará disponível com todos os endpoints pré-configurados
+
+## 📦 Instalação e Configuração [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 ### Pré-requisitos
 
@@ -83,7 +121,7 @@ DATABASE_URL=sqlite:///db.sqlite3
 DEBUG=False
 ```
 
-## 🏃 Como Executar
+## 🏃 Como Executar [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 ### Aplicar Migrations do Banco de Dados
 
@@ -133,9 +171,9 @@ curl "http://localhost:8000/scraping/status?job_id=1"
 curl "http://localhost:8000/scraping/status"
 ```
 
-## 🔧 Endpoints da API
+## 🔧 Endpoints da API [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
-### Endpoints Principais (Obrigatórios)
+### Endpoints Principais (Obrigatórios) [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 #### Health Check
 - **GET** `/health/` - Verifica o status da API e conectividade com o banco de dados
@@ -163,7 +201,7 @@ curl "http://localhost:8000/scraping/status"
   - Retorna informações do último job se `job_id` não for fornecido
   - Inclui: status do job (pending/in_progress/completed/error), progresso, timestamps
 
-### Endpoints Opcionais (Bônus)
+### Endpoints Opcionais (Bônus) [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 #### Estatísticas (Não Implementados)
 - **GET** `/stats/overview` - Estatísticas gerais da coleção
@@ -184,18 +222,18 @@ curl "http://localhost:8000/scraping/status"
 - **POST** `/auth/logout` - Logout de usuário
 - **POST** `/auth/refresh` - Renovação de token
 
-## 🌐 Exemplos de Uso
+## 🌐 Exemplos de Uso [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 A API pode ser testada de duas formas: via **linha de comando (curl)** ou via **Swagger UI (interface gráfica)**. Recomendamos usar o Swagger UI para exploração inicial, pois oferece documentação interativa e validação automática.
 
-### 📖 Acessando a Documentação Interativa
+### 📖 Acessando a Documentação Interativa [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 **Swagger UI**: http://localhost:8000/docs
 **ReDoc**: http://localhost:8000/redoc
 
 ---
 
-### Verificar Status da API
+### Verificar Status da API [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 **Via curl:**
 ```bash
@@ -210,7 +248,7 @@ curl http://localhost:8000/health/
 
 ---
 
-### Listar Livros (com paginação)
+### Listar Livros (com paginação) [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 **Via curl:**
 ```bash
@@ -251,7 +289,7 @@ curl "http://localhost:8000/books/?page=1&per_page=10"
 
 ---
 
-### Buscar Livro por ID
+### Buscar Livro por ID [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 **Via curl:**
 ```bash
@@ -280,7 +318,7 @@ curl "http://localhost:8000/books/1"
 
 ---
 
-### Buscar Livros por Título
+### Buscar Livros por Título [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 **Via curl:**
 ```bash
@@ -322,7 +360,7 @@ curl "http://localhost:8000/books/search?title=python&page=1&per_page=10"
 
 ---
 
-### Buscar Livros por Categoria
+### Buscar Livros por Categoria [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 **Via curl:**
 ```bash
@@ -341,7 +379,7 @@ curl "http://localhost:8000/books/search?category=Fiction&page=1&per_page=10"
 
 ---
 
-### Listar Todas as Categorias
+### Listar Todas as Categorias [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 **Via curl:**
 ```bash
@@ -376,7 +414,7 @@ curl "http://localhost:8000/categories/?page=1&per_page=20"
 
 ---
 
-### Disparar Processo de Scraping (Assíncrono)
+### Disparar Processo de Scraping (Assíncrono) [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 **Via curl:**
 ```bash
@@ -413,7 +451,7 @@ curl -X POST http://localhost:8000/scraping/trigger
 
 ---
 
-### Verificar Status do Scraping
+### Verificar Status do Scraping [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 **Via curl:**
 ```bash
@@ -496,7 +534,7 @@ curl "http://localhost:8000/scraping/status"
 
 ---
 
-### 💡 Dicas para Usar o Swagger UI
+### 💡 Dicas para Usar o Swagger UI [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 - **Schemas**: Role até o final da página do Swagger para ver todos os modelos de dados
 - **Validação**: O Swagger valida automaticamente os tipos de dados antes de enviar
@@ -504,7 +542,7 @@ curl "http://localhost:8000/scraping/status"
 - **Download**: Baixe a especificação OpenAPI em http://localhost:8000/openapi.json
 - **Autorização**: Quando implementada autenticação, use o botão "Authorize" no topo
 
-## 📁 Estrutura do Projeto
+## 📁 Estrutura do Projeto [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 ```
 tech-challenge-1/
@@ -539,7 +577,7 @@ tech-challenge-1/
 └── README.md                 # Este arquivo
 ```
 
-## 🗄️ Banco de Dados
+## 🗄️ Banco de Dados [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 ### Modelo de Dados
 
@@ -569,7 +607,7 @@ O projeto utiliza SQLite como banco de dados com a seguinte estrutura:
 - `email` (String) - Email do usuário (único)
 - `password` (String) - Senha hash
 
-### Gerenciamento do Banco
+### Gerenciamento do Banco [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 O banco de dados é gerenciado através do Alembic (migrations). Para criar ou atualizar o banco de dados, execute:
 
@@ -586,7 +624,7 @@ uv run alembic history
 
 O arquivo do banco é criado em `db.sqlite3` após a primeira execução das migrations.
 
-## 🕷️ Web Scraping
+## 🕷️ Web Scraping [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 ### Características do Scraper
 
@@ -613,7 +651,7 @@ O scraping é executado de forma assíncrona, proporcionando:
 4. **Proteção Contra Concorrência**: Sistema impede múltiplos jobs simultâneos
 5. **Persistência**: Histórico de jobs mantido no banco de dados
 
-### Fonte de Dados
+### Fonte de Dados [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 - **URL**: https://books.toscrape.com/
 - **Campos Extraídos**:
@@ -624,7 +662,7 @@ O scraping é executado de forma assíncrona, proporcionando:
   - Categoria
   - URL da imagem
 
-## 🧪 Testes
+## 🧪 Testes [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 ### Executar Testes
 
@@ -639,7 +677,7 @@ uv run pytest -v
 uv run pytest --cov=src --cov-report=html
 ```
 
-### Cobertura de Testes
+### Cobertura de Testes [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 O projeto inclui testes para:
 - ✅ Rotas da API
@@ -648,18 +686,7 @@ O projeto inclui testes para:
 - ✅ Funções de scraping
 - ✅ Manipulação de arquivos CSV
 
-## 📊 Coleção Postman
-
-Uma coleção Postman completa está disponível em `Tech_Challenge_API.postman_collection.json` com todos os endpoints configurados e exemplos de requisições.
-
-### Importar no Postman
-
-1. Abra o Postman
-2. Clique em "Import"
-3. Selecione o arquivo `Tech_Challenge_API.postman_collection.json`
-4. A coleção estará disponível com todos os endpoints pré-configurados
-
-## 🏗️ Arquitetura e Pipeline de Dados
+## 🏗️ Arquitetura e Pipeline de Dados [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 ### Visão Geral
 
@@ -673,7 +700,7 @@ A imagem ilustra a arquitetura lógica da API, destacando a separação de respo
 - **Schemas**: define os modelos de entrada e saída de dados da API com Pydantic, assegurando a validação e serialização das informações trafegadas entre o cliente e o servidor.
 - **Data Sources**: compreende as camadas de persistência da aplicação, sendo o SQLite a principal fonte de dados usada para leitura e escrita, e o CSV o artefato auxiliar para futura integração com pipelines de ciência de dados.
 
-### CI/CD
+### CI/CD [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 A imagem representa o fluxo de Integração Contínua (CI) e Entrega Contínua (CD) da aplicação, mostrando as etapas automatizadas que garantem a qualidade do código, o deploy da aplicação e a execução do scraping em ambiente de produção (Render). O fluxo de CI/CD conta com os seguintes workflows:
 
@@ -682,7 +709,7 @@ A imagem representa o fluxo de Integração Contínua (CI) e Entrega Contínua (
 - **Testes e Cobertura**: etapa inicial do pipeline acionada a cada push no branch principal (main). Nela, são instaladas dependências, executados testes automatizados e gerado o relatório de cobertura de código, que é publicado como artefato para análise posterior.
 - **Deploy**: responsável por acionar o processo de deploy automático no Render, utilizando um Deploy Hook URL configurado no repositório. Essa etapa envia o commit hash do GitHub para vincular a versão implantada ao código-fonte correspondente. A seguir um polling de status aguarda o Deploy se concluído, para que então o job que scraping possa ser acionado. O job de scraping é responsável por executar o endpoint da API que realiza o scraping a persistencia dos dados obtidos, fazendo com que a API esteja pronta para utilização
 
-### Fluxo Sequencial da API
+### Fluxo Sequencial da API [↑](#tech-challenge-1---api-de-consulta-de-livros)
 A imagem apresenta o diagrama de sequência da aplicação Scraper API, descrevendo em detalhes os três principais fluxos que compõem o processo completo de scraping, verificação e consumo dos dados.
 
 <img src="docs/arquitetura-sequencia-scraping.jpg" width="70%"><br/>
@@ -691,7 +718,7 @@ A imagem apresenta o diagrama de sequência da aplicação Scraper API, descreve
 - **Fluxo 2 - Verifica Status do Scraping**: permite ao cliente acompanhar a execução do scraping em tempo real. Por meio do endpoint GET /scraping/status?job_id={id}, a API consulta o banco e retorna os detalhes do job, como identificador, status atual (pending, in_progress ou completed), horário de início e término, e possíveis mensagens de erro. Esse fluxo possibilita monitorar o progresso sem bloquear o cliente enquanto o scraping é processado em background.
 - **Fluxo 3 - Consumo de Dados**: disponibiliza os resultados do scraping por meio do endpoint GET /books. Ao ser acionado, o serviço consulta o banco SQLite, recupera a lista de livros extraídos e retorna os dados em formato JSON padronizado. Esse fluxo representa a etapa final do pipeline, permitindo que cientistas de dados, aplicações externas ou sistemas de recomendação consumam as informações atualizadas diretamente da API.
 
-### Fluxo de Dados
+### Fluxo de Dados [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 ```
 [books.toscrape.com]
@@ -704,7 +731,7 @@ A imagem apresenta o diagrama de sequência da aplicação Scraper API, descreve
     └→ [CSV File] → [Análise/ML]
 ```
 
-### Escalabilidade Futura
+### Escalabilidade Futura [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 A arquitetura foi desenhada pensando em:
 - **Modularidade**: Componentes independentes e reutilizáveis
@@ -713,7 +740,7 @@ A arquitetura foi desenhada pensando em:
 - **Cache**: Possibilidade de adicionar camada de cache (Redis)
 - **Queue**: Preparado para adicionar filas de processamento (Celery)
 
-## 🎓 Cenário de Uso para ML
+## 🎓 Cenário de Uso para ML [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 Esta API foi desenvolvida pensando em servir como base para:
 1. **Sistemas de Recomendação**: Dados estruturados de livros, categorias e ratings
@@ -721,21 +748,8 @@ Esta API foi desenvolvida pensando em servir como base para:
 3. **Classificação de Texto**: Categorização automática baseada em títulos
 4. **Feature Engineering**: Endpoints preparados para exportar features
 
-## 👥 Equipe
 
-Desenvolvido como parte do Tech Challenge - Fase 1
-Pós-Tech FIAP - Machine Learning Engineering
-
-| Nome Completo | RM | Google Skills Badge | Github user |
-|---------------|----|--------------------|-------------|
-| Allan Vital | RM369068 | [Badge](https://www.skills.google/public_profiles/6336cac1-9227-4eeb-969e-dedafd67c003) | [@vitallan](https://github.com/vitallan) |
-| Beatriz Mendonça | RM367076 | [Badge](https://www.skills.google/public_profiles/7a5f64c0-9f90-4302-afaa-2f6024bdae53) | [@beamendon](https://github.com/beamendon) |
-| Fernando Nunes | RM368361 | [Badge](https://www.skills.google/public_profiles/eef5e153-41c5-497d-bfd5-8f69ab2f1883) | [@fernandoleitao](https://github.com/fernandoleitao) |
-| Nhaiara Moura | RM368096 | [Badge](https://www.skills.google/public_profiles/f1ae1664-8b59-4214-bbf9-086a19dc8faa) | [@nhaiara](https://github.com/nhaiara) |
-| Rafael Melazzo | RM368728 | [Badge](https://www.skills.google/public_profiles/86e31f1d-0273-482f-af15-00e559df7961) | [@rafaelmelazzo](https://github.com/rafaelmelazzo) |
-
-
-## 📄 Licença
+## 📄 Licença [↑](#tech-challenge-1---api-de-consulta-de-livros)
 
 Este projeto está sob a licença MIT.
 
