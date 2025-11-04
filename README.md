@@ -638,6 +638,36 @@ Uma coleção Postman completa está disponível em `Tech_Challenge_API.postman_
 
 ## 🏗️ Arquitetura e Pipeline de Dados
 
+### Visão Geral
+
+A imagem ilustra a arquitetura lógica da API, destacando a separação de responsabilidades entre as principais camadas do código e suas interações com as fontes de dados.
+
+<img src="docs/arquitetura-geral.jpg"><br/>
+
+- **Routes**: define os endpoints da aplicação, atua como ponto de entrada das requisições HTTP e encaminha as chamadas para as demais camadas conforme o tipo de operação solicitada.
+- **Services**: centraliza a lógica de negócio da aplicação, orquestra o fluxo entre as rotas, modelos e fontes de dados, e controla o processo de scraping, leitura e escrita no banco e no CSV.
+- **Models**: representa as entidades do domínio do sistema, implementa o mapeamento objeto-relacional via SQLAlchemy e garante consistência entre os objetos da aplicação e as tabelas do banco.
+- **Schemas**: define os modelos de entrada e saída de dados da API com Pydantic, assegurando a validação e serialização das informações trafegadas entre o cliente e o servidor.
+- **Data Sources**: compreende as camadas de persistência da aplicação, sendo o SQLite a principal fonte de dados usada para leitura e escrita, e o CSV o artefato auxiliar para futura integração com pipelines de ciência de dados.
+
+### CI/CD
+
+A imagem representa o fluxo de Integração Contínua (CI) e Entrega Contínua (CD) da aplicação, mostrando as etapas automatizadas que garantem a qualidade do código, o deploy da aplicação e a execução do scraping em ambiente de produção (Render). O fluxo de CI/CD conta com os seguintes workflows:
+
+<img src="docs/arquitetura-cicd.jpg" width="70%"><br/>
+
+- **Testes e Cobertura**: etapa inicial do pipeline acionada a cada push no branch principal (main). Nela, são instaladas dependências, executados testes automatizados e gerado o relatório de cobertura de código, que é publicado como artefato para análise posterior.
+- **Deploy**: responsável por acionar o processo de deploy automático no Render, utilizando um Deploy Hook URL configurado no repositório. Essa etapa envia o commit hash do GitHub para vincular a versão implantada ao código-fonte correspondente. A seguir um polling de status aguarda o Deploy se concluído, para que então o job que scraping possa ser acionado. O job de scraping é responsável por executar o endpoint da API que realiza o scraping a persistencia dos dados obtidos, fazendo com que a API esteja pronta para utilização
+
+### Fluxo Sequencial da API
+A imagem apresenta o diagrama de sequência da aplicação Scraper API, descrevendo em detalhes os três principais fluxos que compõem o processo completo de scraping, verificação e consumo dos dados.
+
+<img src="docs/arquitetura-sequencia-scraping.jpg" width="70%"><br/>
+
+- **Fluxo 1 - Scraping Trigger**: inicia o processo de extração de dados. O cliente envia uma requisição POST /scraping/trigger, acionando a API para criar um novo registro de Scraping Job no banco de dados, com status inicial pending. A partir disso, um processo assíncrono é executado (scrap_books()), que realiza requisições HTTP ao site books.toscrape.com para coletar as informações de livros (título, preço, categoria, disponibilidade, avaliação e imagem). Os dados extraídos são armazenados localmente no arquivo books.csv e simultaneamente persistidos no banco SQLite. Ao término do processo, o registro do job é atualizado com o status final e o número de itens processados.
+- **Fluxo 2 - Verifica Status do Scraping**: permite ao cliente acompanhar a execução do scraping em tempo real. Por meio do endpoint GET /scraping/status?job_id={id}, a API consulta o banco e retorna os detalhes do job, como identificador, status atual (pending, in_progress ou completed), horário de início e término, e possíveis mensagens de erro. Esse fluxo possibilita monitorar o progresso sem bloquear o cliente enquanto o scraping é processado em background.
+- **Fluxo 3 - Consumo de Dados**: disponibiliza os resultados do scraping por meio do endpoint GET /books. Ao ser acionado, o serviço consulta o banco SQLite, recupera a lista de livros extraídos e retorna os dados em formato JSON padronizado. Esse fluxo representa a etapa final do pipeline, permitindo que cientistas de dados, aplicações externas ou sistemas de recomendação consumam as informações atualizadas diretamente da API.
+
 ### Fluxo de Dados
 
 ```
