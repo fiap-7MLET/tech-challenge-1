@@ -1,7 +1,30 @@
 # Tech Challenge 1 - API de Consulta de Livros
-
 Projeto desenvolvido para o Tech Challenge da Fase 1 da Pós-Tech FIAP em Machine Learning Engineering.
 
+<details>
+<summary><strong>🗂 SUMÁRIO</strong></summary>
+
+- [📋 Sobre o Projeto](#📋-sobre-o-projeto)
+- [🎯 Objetivos do Projeto](#🎯-objetivos-do-projeto)
+- [🚀 Tecnologias Utilizadas](#🚀-tecnologias-utilizadas)
+- [📦 Instalação e Configuração](#📦-instalação-e-configuração)
+- [🏃 Como Executar](#🏃-como-executar)
+- [🔧 Endpoints da API](#🔧-endpoints-da-api)
+  - [Endpoints Principais (Obrigatórios)](#endpoints-principais-obrigatórios)
+  - [Endpoints Opcionais (Bônus)](#endpoints-opcionais-bônus)
+- [🌐 Exemplos de Uso](#🌐-exemplos-de-uso)
+- [📁 Estrutura do Projeto](#📁-estrutura-do-projeto)
+- [🗄️ Banco de Dados](#🗄️-banco-de-dados)
+- [🕷️ Web Scraping](#🕷️-web-scraping)
+- [🧪 Testes](#🧪-testes)
+- [📊 Coleção Postman](#📊-coleção-postman)
+- [🏗️ Arquitetura e Pipeline de Dados](#🏗️-arquitetura-e-pipeline-de-dados)
+- [🎓 Cenário de Uso para ML](#🎓-cenário-de-uso-para-ml)
+- [👥 Equipe](#👥-equipe)
+- [📄 Licença](#📄-licença)
+</details>
+
+---
 ## 📋 Sobre o Projeto
 
 API REST pública desenvolvida com FastAPI para gerenciamento e consulta de catálogo de livros. O projeto inclui funcionalidade completa de web scraping para coleta automática de dados do site [books.toscrape.com](https://books.toscrape.com/), armazenamento em banco de dados SQLite e disponibilização via endpoints RESTful.
@@ -703,10 +726,19 @@ Esta API foi desenvolvida pensando em servir como base para:
 Desenvolvido como parte do Tech Challenge - Fase 1
 Pós-Tech FIAP - Machine Learning Engineering
 
+| Nome Completo | RM | Google Skills Badge | Github user |
+|---------------|----|--------------------|-------------|
+| Allan Vital | RM369068 | [Badge](https://www.skills.google/public_profiles/6336cac1-9227-4eeb-969e-dedafd67c003) | [@vitallan](https://github.com/vitallan) |
+| Beatriz Mendonça | RM367076 | [Badge](https://www.skills.google/public_profiles/7a5f64c0-9f90-4302-afaa-2f6024bdae53) | [@beamendon](https://github.com/beamendon) |
+| Fernando Nunes | RM368361 | [Badge](https://www.skills.google/public_profiles/eef5e153-41c5-497d-bfd5-8f69ab2f1883) | [@fernandoleitao](https://github.com/fernandoleitao) |
+| Nhaiara Moura | RM368096 | [Badge](https://www.skills.google/public_profiles/f1ae1664-8b59-4214-bbf9-086a19dc8faa) | [@nhaiara](https://github.com/nhaiara) |
+| Rafael Melazzo | RM368728 | [Badge](https://www.skills.google/public_profiles/86e31f1d-0273-482f-af15-00e559df7961) | [@rafaelmelazzo](https://github.com/rafaelmelazzo) |
+
+
 ## 📄 Licença
 
 Este projeto está sob a licença MIT.
 
 ---
 
-**Observação**: Este projeto foi desenvolvido para fins educacionais como parte do Tech Challenge da FIAP.
+**Observação**: Este projeto foi desenvolvido para fins educacionais como parte do Tech Challenge da Pós Graduação FIAP.
