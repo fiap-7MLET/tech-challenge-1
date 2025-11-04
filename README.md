@@ -4,9 +4,15 @@ Projeto desenvolvido para o Tech Challenge da Fase 1 da Pós-Tech FIAP em Machin
 <details>
 <summary><strong>🗂 SUMÁRIO</strong></summary>
 
+- [👥 Equipe](#-equipe)
 - [📋 Sobre o Projeto](#-sobre-o-projeto)
 - [🎯 Objetivos do Projeto](#-objetivos-do-projeto)
 - [🚀 Tecnologias Utilizadas](#-tecnologias-utilizadas)
+- [🌐 API Pública](#-api-publica)
+- [💾 Entregáveis Adicionais](#-entregáveis-adicionais)
+  - [🎥 Apresentação em Vídeo](#-apresentação-em-vídeo)
+  - [🎞️ Apresentação de Slides](#-apresentação-de-slide)
+  - [📊 Coleção Postman](#-coleção-postman)
 - [📦 Instalação e Configuração](#-instalação-e-configuração)
 - [🏃 Como Executar](#-como-executar)
 - [🔧 Endpoints da API](#-endpoints-da-api)
@@ -17,14 +23,25 @@ Projeto desenvolvido para o Tech Challenge da Fase 1 da Pós-Tech FIAP em Machin
 - [🗄️ Banco de Dados](#-banco-de-dados)
 - [🕷️ Web Scraping](#-web-scraping)
 - [🧪 Testes](#-testes)
-- [📊 Coleção Postman](#-coleção-postman)
 - [🏗️ Arquitetura e Pipeline de Dados](#-arquitetura-e-pipeline-de-dados)
 - [🎓 Cenário de Uso para ML](#-cenário-de-uso-para-ml)
-- [👥 Equipe](#-equipe)
 - [📄 Licença](#-licença)
 </details>
 
 ---
+## 👥 Equipe
+
+Desenvolvido como parte do Tech Challenge - Fase 1
+Pós-Tech FIAP - Machine Learning Engineering
+
+| Nome Completo | RM | Google Skills | Github |
+|---------------|----|--------------------|-------------|
+| Allan Vital | RM369068 | [Badge](https://www.skills.google/public_profiles/6336cac1-9227-4eeb-969e-dedafd67c003) | [@vitallan](https://github.com/vitallan) |
+| Beatriz Mendonça | RM367076 | [Badge](https://www.skills.google/public_profiles/7a5f64c0-9f90-4302-afaa-2f6024bdae53) | [@beamendon](https://github.com/beamendon) |
+| Fernando Nunes | RM368361 | [Badge](https://www.skills.google/public_profiles/eef5e153-41c5-497d-bfd5-8f69ab2f1883) | [@fernandoleitao](https://github.com/fernandoleitao) |
+| Nhaiara Moura | RM368096 | [Badge](https://www.skills.google/public_profiles/f1ae1664-8b59-4214-bbf9-086a19dc8faa) | [@nhaiara](https://github.com/nhaiara) |
+| Rafael Melazzo | RM368728 | [Badge](https://www.skills.google/public_profiles/86e31f1d-0273-482f-af15-00e559df7961) | [@rafaelmelazzo](https://github.com/rafaelmelazzo) |
+
 ## 📋 Sobre o Projeto
 
 API REST pública desenvolvida com FastAPI para gerenciamento e consulta de catálogo de livros. O projeto inclui funcionalidade completa de web scraping para coleta automática de dados do site [books.toscrape.com](https://books.toscrape.com/), armazenamento em banco de dados SQLite e disponibilização via endpoints RESTful.
@@ -35,6 +52,7 @@ API REST pública desenvolvida com FastAPI para gerenciamento e consulta de cat�
 - Criar uma API pública escalável e reusável para futuros modelos de Machine Learning
 - Implementar web scraping robusto com processamento assíncrono
 - Fornecer endpoints RESTful bem documentados e testados
+- Apresentar o projeto em vídeo
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -50,6 +68,22 @@ API REST pública desenvolvida com FastAPI para gerenciamento e consulta de cat�
 ## 🌐 API Pública
 
 - [https://tech-challenge-1-7zyn.onrender.com/docs](https://tech-challenge-1-7zyn.onrender.com/docs)
+
+## 💾 Entregáveis Adicionais
+
+- ### 🎥 Apresentação em Vídeo
+  - Veja os detalhes e explicação sobre o nosso projeto na nossa [apresentação em vídeo](https://drive.google.com/file/d/1RqUlpd3zPc5sA--CU2jniGa7yYpYW_nc/view).
+
+- ### 🎞️ Apresentação de Slides
+  - Acesse os slides [aqui](https://docs.google.com/presentation/d/1HfFd1JdZnVFsXir5gKII77OlkZJQyAfkj0i3a_KLE_U/edit?usp=sharing).
+
+- ### 📊 Coleção Postman
+  Uma coleção Postman completa está disponível em `Tech_Challenge_API.postman_collection.json` com todos os endpoints configurados e exemplos de requisições.
+  #### Importar no Postman
+    1. Abra o Postman
+    2. Clique em "Import"
+    3. Selecione o arquivo `Tech_Challenge_API.postman_collection.json`
+    4. A coleção estará disponível com todos os endpoints pré-configurados
 
 ## 📦 Instalação e Configuração
 
@@ -648,17 +682,6 @@ O projeto inclui testes para:
 - ✅ Funções de scraping
 - ✅ Manipulação de arquivos CSV
 
-## 📊 Coleção Postman
-
-Uma coleção Postman completa está disponível em `Tech_Challenge_API.postman_collection.json` com todos os endpoints configurados e exemplos de requisições.
-
-### Importar no Postman
-
-1. Abra o Postman
-2. Clique em "Import"
-3. Selecione o arquivo `Tech_Challenge_API.postman_collection.json`
-4. A coleção estará disponível com todos os endpoints pré-configurados
-
 ## 🏗️ Arquitetura e Pipeline de Dados
 
 ### Visão Geral
@@ -720,19 +743,6 @@ Esta API foi desenvolvida pensando em servir como base para:
 2. **Análise de Preços**: Histórico e comparação de preços
 3. **Classificação de Texto**: Categorização automática baseada em títulos
 4. **Feature Engineering**: Endpoints preparados para exportar features
-
-## 👥 Equipe
-
-Desenvolvido como parte do Tech Challenge - Fase 1
-Pós-Tech FIAP - Machine Learning Engineering
-
-| Nome Completo | RM | Google Skills Badge | Github user |
-|---------------|----|--------------------|-------------|
-| Allan Vital | RM369068 | [Badge](https://www.skills.google/public_profiles/6336cac1-9227-4eeb-969e-dedafd67c003) | [@vitallan](https://github.com/vitallan) |
-| Beatriz Mendonça | RM367076 | [Badge](https://www.skills.google/public_profiles/7a5f64c0-9f90-4302-afaa-2f6024bdae53) | [@beamendon](https://github.com/beamendon) |
-| Fernando Nunes | RM368361 | [Badge](https://www.skills.google/public_profiles/eef5e153-41c5-497d-bfd5-8f69ab2f1883) | [@fernandoleitao](https://github.com/fernandoleitao) |
-| Nhaiara Moura | RM368096 | [Badge](https://www.skills.google/public_profiles/f1ae1664-8b59-4214-bbf9-086a19dc8faa) | [@nhaiara](https://github.com/nhaiara) |
-| Rafael Melazzo | RM368728 | [Badge](https://www.skills.google/public_profiles/86e31f1d-0273-482f-af15-00e559df7961) | [@rafaelmelazzo](https://github.com/rafaelmelazzo) |
 
 
 ## 📄 Licença
