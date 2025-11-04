@@ -24,6 +24,10 @@ API REST pública desenvolvida com FastAPI para gerenciamento e consulta de cat�
 - **Pytest** - Framework de testes
 - **uv** - Gerenciador moderno de dependências e ambientes virtuais Python
 
+## 🌐 API Pública
+
+- [https://tech-challenge-1-7zyn.onrender.com/docs](https://tech-challenge-1-7zyn.onrender.com/docs)
+
 ## 📦 Instalação e Configuração
 
 ### Pré-requisitos
