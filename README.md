@@ -1,5 +1,7 @@
 # Tech Challenge 1 - API de Consulta de Livros
-Projeto desenvolvido para o Tech Challenge da Fase 1 da Pós-Tech FIAP em Machine Learning Engineering.
+Projeto desenvolvido para o Tech Challenge da Fase 1 da Pós-Tech FIAP em Machine Learning Engineering acessível no Repositório Público do Github em [https://github.com/fiap-7MLET/tech-challenge-1](https://github.com/fiap-7MLET/tech-challenge-1).
+
+---
 
 <details>
 <summary><strong>🗂 SUMÁRIO</strong></summary>
